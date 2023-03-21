@@ -4,7 +4,7 @@
         "@sap/hdi-deploy": "^4.5.3",
         "hana-cli": "^3.202303.2"
     },
-    "scripts": { 
+    "scripts": {
         "start": "node node_modules/@sap/hdi-deploy/deploy.js"
     }
 }
