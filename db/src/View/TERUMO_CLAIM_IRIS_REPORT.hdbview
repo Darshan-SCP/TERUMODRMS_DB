@@ -1,0 +1,57 @@
+VIEW "TERUMODRMS_DB.db.View::TERUMO_CLAIM_IRIS_REPORT" AS
+SELECT  
+		  H."UTID_NO" as "UTID",	
+          H."CR_NO" as "PERNo",
+          H."BU_CODE" as "Division",
+		  H."BU_SUB_CODE" as "SubDivision",	
+          H."DISTRIBUTOR_ID" as "Code",
+          TUM."NAME" as "DealerName",
+          TUM."REGION" as "Region",
+          TCP."DESCRIPTION" as "TypeofClaim",
+          H."CREATED_ON" as "ClaimDateAsPERSheet",
+          I."DIST_INVOICE" as "DInvoice",
+          I."SEC_SALES_DATE" as "SSTransactionDate",
+          CONCAT(SUBSTR(MONTHNAME(TO_NVARCHAR(I."SEC_SALES_DATE",'YYYY-MM-DD')),0,3), CONCAT('-',YEAR(TO_NVARCHAR(I."SEC_SALES_DATE",'YYYY-MM-DD'))))
+           as "SSTransactionMonth",
+          I."HOSP_ACK" as "HospitalACK",
+          HOS."DESCRIPTION" as "Hospital",
+          HOS."CITY" as "City",
+          I."INVOICE_NO" as "TIPL",
+          CONCAT(SUBSTR(MONTHNAME(TO_NVARCHAR(I."INVOICE_DATE",'YYYY-MM-DD')),0,3), CONCAT('-',YEAR(TO_NVARCHAR(I."INVOICE_DATE",'YYYY-MM-DD')))) as 
+          "TIPLMonth",
+          /*I."TIPLMONTH" as "TIPL Month", Calculate month on Invoice Date*/
+          I."INVOICE_DATE" as "TIPLDate",
+          I."ITEM_CODE" as "Itemcode",
+          TMM."MATERIAL_DESC" as "ItemDiscr.",
+          I."INVOICE_QUANTITY" as "Qty",
+          I."INVOICE_RATE" as "TIPLSale",
+          I."REQUESTED_RATE" as "ReqPrice",
+          I."REQUESTED_AMOUNT" as "ClaimAmt",
+          H."CAS_NO" as "CAS",
+          I."PROCESSSED_AMOUNT" as "ProcessedAmt",
+          I."PROCESSSED_RATE" as "ProcessedValue",
+          (I."REQUESTED_AMOUNT" - I."PROCESSSED_AMOUNT") as "Deduction",
+          I."PRODUCT_STICKER" as "ProductSticker",
+          I."PHYS_NAME" as "PhysicianName",
+          I."PATIENT_NAME" as "PatientName",
+          TSM."DESCRIPTION" as "Status",
+          TUUM."NAME" as "SalesAssociate",
+          H."SAP_CREDIT_NOTE" as "CreditNoteNo.",
+          H."SAP_CREDIT_NOTE_AMOUNT" as "PaidAmount",
+          H."SAP_CREDIT_NOTE_DATE" as "Date"
+
+FROM "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_HEADER" as H 
+INNER JOIN "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_ITEMS" as I
+ON H."CR_NO" =  I."CR_NO"
+INNER JOIN "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_TYPE" as TCP
+ON H."CLAIM_TYPE" = TCP."CODE"
+INNER JOIN "TERUMODRMS_DB.db.Tables::TERUMO_STATUS_MASTER" as TSM
+ON H."STATUS" = TSM."CODE"
+INNER JOIN "TERUMODRMS_DB.db.Tables::TERUMO_MATERIEL_MASTER" as TMM
+ON I."ITEM_CODE" = TMM."MATERIAL_CODE"
+INNER JOIN "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER" as TUM
+ON H."DISTRIBUTOR_ID" = TUM."USER_ID"
+LEFT OUTER JOIN "TERUMODRMS_DB.db.Tables::TERUMO_HOSPITAL_MASTER" as HOS
+ON H."HOSP_CODE" = HOS."CODE"
+INNER JOIN "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER" as TUUM
+ON H."SALES_ASSOCIATE_ID" = TUUM."USER_ID"

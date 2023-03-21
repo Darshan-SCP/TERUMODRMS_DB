@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TERUMODRMS_DB.db.View::CopyOfTERUMO_DIST_ACTUALS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CopyOfTERUMO_DIST_ACTUALS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TARGET">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TARGET</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="CUSTOMER_CODE"/>
+      <viewAttribute id="CUSTOMER_NAME"/>
+      <viewAttribute id="GPC_NAME"/>
+      <viewAttribute id="APRIL"/>
+      <viewAttribute id="MAY"/>
+      <viewAttribute id="JUNE"/>
+      <viewAttribute id="JULY"/>
+      <viewAttribute id="AUGUST"/>
+      <viewAttribute id="SEPTEMBER"/>
+      <viewAttribute id="OCTOBER"/>
+      <viewAttribute id="NOVEMBER"/>
+      <viewAttribute id="DECEMBER"/>
+      <viewAttribute id="JANUARY"/>
+      <viewAttribute id="FEBRUARY"/>
+      <viewAttribute id="MARCH"/>
+      <viewAttribute id="VOL_APRIL"/>
+      <viewAttribute id="VOL_MAY"/>
+      <viewAttribute id="VOL_JUNE"/>
+      <viewAttribute id="VOL_JULY"/>
+      <viewAttribute id="VOL_AUGUST"/>
+      <viewAttribute id="VOL_SEPTEMBER"/>
+      <viewAttribute id="VOL_OCTOBER"/>
+      <viewAttribute id="VOL_NOVEMBER"/>
+      <viewAttribute id="VOL_DECEMBER"/>
+      <viewAttribute id="VOL_JANUARY"/>
+      <viewAttribute id="VOL_FEBRUARY"/>
+      <viewAttribute id="VOL_MARCH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CUSTOMER_CODE_INT" datatype="BIGINT" expressionLanguage="SQL">
+        <formula>CASE  
+	 WHEN &quot;CUSTOMER_CODE&quot;=null then 0 
+	 WHEN TRIM(&quot;CUSTOMER_CODE&quot;)='' then 0 
+	 ELSE TO_BIGINT(&quot;CUSTOMER_CODE&quot;) 
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TARGET">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_CODE" source="CUSTOMER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APRIL" source="MONTH1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAY" source="MONTH2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JUNE" source="MONTH3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JULY" source="MONTH4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGUST" source="MONTH5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SEPTEMBER" source="MONTH6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OCTOBER" source="MONTH7"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NOVEMBER" source="MONTH8"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DECEMBER" source="MONTH9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JANUARY" source="MONTH10"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FEBRUARY" source="MONTH11"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MARCH" source="MONTH12"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_APRIL" source="VOL_MONTH1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_MAY" source="VOL_MONTH2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_JUNE" source="VOL_MONTH3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_JULY" source="VOL_MONTH4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_AUGUST" source="VOL_MONTH5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_SEPTEMBER" source="VOL_MONTH6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_OCTOBER" source="VOL_MONTH7"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_NOVEMBER" source="VOL_MONTH8"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_DECEMBER" source="VOL_MONTH9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_JANUARY" source="VOL_MONTH10"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_FEBRUARY" source="VOL_MONTH11"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_MARCH" source="VOL_MONTH12"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3">
+    <viewAttributes>
+      <viewAttribute id="CUSTOMER_CODE"/>
+      <viewAttribute id="QTY"/>
+      <viewAttribute id="TAXBASE_AMT"/>
+      <viewAttribute id="TAX_AMT"/>
+      <viewAttribute id="INVOICE_DATE"/>
+      <viewAttribute id="GPCNAME"/>
+    
+      <viewAttribute id="BUCODE"/>
+      <viewAttribute id="SUBDIVISION"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CUSTOMER_CODE_INT" datatype="BIGINT" expressionLanguage="SQL">
+        <formula>CASE  
+	 WHEN &quot;CUSTOMER_CODE&quot;=null then 0 
+	 WHEN TRIM(&quot;CUSTOMER_CODE&quot;)='' then 0 
+	 ELSE TO_BIGINT(&quot;CUSTOMER_CODE&quot;) 
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="15" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;INVOICE_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;INVOICE_DATE&quot;)))
+	 ELSE CONCAT(YEAR(&quot;INVOICE_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;INVOICE_DATE&quot;, 1))))
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="QUARTER" datatype="NVARCHAR" length="2" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 1 AND 3 then 'Q4'
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 4 AND 6 then 'Q1' 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 7 AND 9 then 'Q2' 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 10 AND 12 then 'Q3' 
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH_NO" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>MONTH(&quot;INVOICE_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH_NAME" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>MONTHNAME(&quot;INVOICE_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="ACTUAL" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>(IFNULL(&quot;TAXBASE_AMT&quot;, 0)+IFNULL(&quot;TAX_AMT&quot;, 0))
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="QUANTITY" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE  
+	 WHEN &quot;QTY&quot;=null then 0 
+	 WHEN TRIM(&quot;QTY&quot;)='' then 0 
+	 ELSE TO_DOUBLE(&quot;QTY&quot;) 
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="CUSTOMER_CODE_INT"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="GPC_NAME"/>
+      <viewAttribute id="CUSTOMER_NAME"/>
+      <viewAttribute id="APRIL" aggregationType="sum"/>
+      <viewAttribute id="MAY" aggregationType="sum"/>
+      <viewAttribute id="JUNE" aggregationType="sum"/>
+      <viewAttribute id="JULY" aggregationType="sum"/>
+      <viewAttribute id="AUGUST" aggregationType="sum"/>
+      <viewAttribute id="SEPTEMBER" aggregationType="sum"/>
+      <viewAttribute id="OCTOBER" aggregationType="sum"/>
+      <viewAttribute id="NOVEMBER" aggregationType="sum"/>
+      <viewAttribute id="DECEMBER" aggregationType="sum"/>
+      <viewAttribute id="JANUARY" aggregationType="sum"/>
+      <viewAttribute id="FEBRUARY" aggregationType="sum"/>
+      <viewAttribute id="MARCH" aggregationType="sum"/>
+      <viewAttribute id="VOL_APRIL" aggregationType="sum"/>
+      <viewAttribute id="VOL_MAY" aggregationType="sum"/>
+      <viewAttribute id="VOL_JUNE" aggregationType="sum"/>
+      <viewAttribute id="VOL_JULY" aggregationType="sum"/>
+      <viewAttribute id="VOL_AUGUST" aggregationType="sum"/>
+      <viewAttribute id="VOL_SEPTEMBER" aggregationType="sum"/>
+      <viewAttribute id="VOL_OCTOBER" aggregationType="sum"/>
+      <viewAttribute id="VOL_NOVEMBER" aggregationType="sum"/>
+      <viewAttribute id="VOL_DECEMBER" aggregationType="sum"/>
+      <viewAttribute id="VOL_JANUARY" aggregationType="sum"/>
+      <viewAttribute id="VOL_FEBRUARY" aggregationType="sum"/>
+      <viewAttribute id="VOL_MARCH" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="CUSTOMER_CODE_INT"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="QUARTER"/>
+      <viewAttribute id="MONTH_NO"/>
+      <viewAttribute id="MONTH_NAME"/>
+      <viewAttribute id="ACTUAL" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="GPCNAME"/>
+    
+      <viewAttribute id="BUCODE"/>
+      <viewAttribute id="SUBDIVISION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QUANTITY" source="QUANTITY"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="QUARTER"/>
+      <viewAttribute id="MONTH_NO" aggregationType="sum"/>
+      <viewAttribute id="MONTH_NAME"/>
+      <viewAttribute id="ACTUAL" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="CUSTOMER_CODE_INT" aggregationType="sum"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="GPC_NAME"/>
+      <viewAttribute id="CUSTOMER_NAME"/>
+      <viewAttribute id="APRIL" aggregationType="sum"/>
+      <viewAttribute id="MAY" aggregationType="sum"/>
+      <viewAttribute id="JUNE" aggregationType="sum"/>
+      <viewAttribute id="JULY" aggregationType="sum"/>
+      <viewAttribute id="AUGUST" aggregationType="sum"/>
+      <viewAttribute id="SEPTEMBER" aggregationType="sum"/>
+      <viewAttribute id="OCTOBER" aggregationType="sum"/>
+      <viewAttribute id="NOVEMBER" aggregationType="sum"/>
+      <viewAttribute id="DECEMBER" aggregationType="sum"/>
+      <viewAttribute id="JANUARY" aggregationType="sum"/>
+      <viewAttribute id="FEBRUARY" aggregationType="sum"/>
+      <viewAttribute id="MARCH" aggregationType="sum"/>
+      <viewAttribute id="VOL_APRIL" aggregationType="sum"/>
+      <viewAttribute id="VOL_MAY" aggregationType="sum"/>
+      <viewAttribute id="VOL_JUNE" aggregationType="sum"/>
+      <viewAttribute id="VOL_JULY" aggregationType="sum"/>
+      <viewAttribute id="VOL_AUGUST" aggregationType="sum"/>
+      <viewAttribute id="VOL_SEPTEMBER" aggregationType="sum"/>
+      <viewAttribute id="VOL_OCTOBER" aggregationType="sum"/>
+      <viewAttribute id="VOL_NOVEMBER" aggregationType="sum"/>
+      <viewAttribute id="VOL_DECEMBER" aggregationType="sum"/>
+      <viewAttribute id="VOL_JANUARY" aggregationType="sum"/>
+      <viewAttribute id="VOL_FEBRUARY" aggregationType="sum"/>
+      <viewAttribute id="VOL_MARCH" aggregationType="sum"/>
+      <viewAttribute id="BUCODE"/>
+      <viewAttribute id="SUBDIVISION"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="TARGET" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE &quot;MONTH_NAME&quot; 
+	 WHEN 'JANUARY' then &quot;JANUARY&quot; 
+	 WHEN 'FEBRUARY' then &quot;FEBRUARY&quot; 
+	 WHEN 'MARCH' then &quot;MARCH&quot; 
+	 WHEN 'APRIL' then &quot;APRIL&quot; 
+	 WHEN 'MAY' then &quot;MAY&quot; 
+	 WHEN 'JUNE' then &quot;JUNE&quot; 
+	 WHEN 'JULY' then &quot;JULY&quot; 
+	 WHEN 'AUGUST' then &quot;AUGUST&quot; 
+	 WHEN 'SEPTEMBER' then &quot;SEPTEMBER&quot; 
+	 WHEN 'OCTOBER' then &quot;OCTOBER&quot; 
+	 WHEN 'NOVEMBER' then &quot;NOVEMBER&quot; 
+	 WHEN 'DECEMBER' then &quot;DECEMBER&quot; 
+	 ELSE 0 
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="DIFFERENCE" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>IFNULL((&quot;ACTUAL&quot; - &quot;TARGET&quot;), 0)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="VOL_TARGET" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE &quot;MONTH_NAME&quot; 
+	 WHEN 'JANUARY' then &quot;VOL_JANUARY&quot; 
+	 WHEN 'FEBRUARY' then &quot;VOL_FEBRUARY&quot; 
+	 WHEN 'MARCH' then &quot;VOL_MARCH&quot; 
+	 WHEN 'APRIL' then &quot;VOL_APRIL&quot; 
+	 WHEN 'MAY' then &quot;VOL_MAY&quot; 
+	 WHEN 'JUNE' then &quot;VOL_JUNE&quot; 
+	 WHEN 'JULY' then &quot;VOL_JULY&quot; 
+	 WHEN 'AUGUST' then &quot;VOL_AUGUST&quot; 
+	 WHEN 'SEPTEMBER' then &quot;VOL_SEPTEMBER&quot; 
+	 WHEN 'OCTOBER' then &quot;VOL_OCTOBER&quot; 
+	 WHEN 'NOVEMBER' then &quot;VOL_NOVEMBER&quot; 
+	 WHEN 'DECEMBER' then &quot;VOL_DECEMBER&quot; 
+	 ELSE 0 
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="VOL_DIFFERENCE" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>IFNULL((&quot;ACTUAL_QUANTITY&quot; - &quot;VOL_TARGET&quot;), 0)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_CODE_INT" source="CUSTOMER_CODE_INT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPC_NAME" source="GPC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APRIL" source="APRIL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAY" source="MAY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JUNE" source="JUNE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JULY" source="JULY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGUST" source="AUGUST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SEPTEMBER" source="SEPTEMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OCTOBER" source="OCTOBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NOVEMBER" source="NOVEMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DECEMBER" source="DECEMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JANUARY" source="JANUARY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FEBRUARY" source="FEBRUARY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MARCH" source="MARCH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_APRIL" source="VOL_APRIL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_MAY" source="VOL_MAY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_JUNE" source="VOL_JUNE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_JULY" source="VOL_JULY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_AUGUST" source="VOL_AUGUST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_SEPTEMBER" source="VOL_SEPTEMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_OCTOBER" source="VOL_OCTOBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_NOVEMBER" source="VOL_NOVEMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_DECEMBER" source="VOL_DECEMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_JANUARY" source="VOL_JANUARY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_FEBRUARY" source="VOL_FEBRUARY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VOL_MARCH" source="VOL_MARCH"/>
+    </input>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUARTER" source="QUARTER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH_NO" source="MONTH_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH_NAME" source="MONTH_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL" source="ACTUAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QUANTITY" source="ACTUAL_QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUCODE" source="BUCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUBDIVISION" source="SUBDIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPC_NAME" source="GPCNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_CODE_INT" source="CUSTOMER_CODE_INT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+    </input>
+    <joinAttribute name="GPC_NAME"/>
+    <joinAttribute name="CUSTOMER_CODE_INT"/>
+    <joinAttribute name="FINANCIAL_YEAR"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_2">
+  <attributes>
+    <attribute id="QUARTER" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="QUARTER"/>
+      <keyMapping columnObjectName="Join_2" columnName="QUARTER"/>
+    </attribute>
+    <attribute id="MONTH_NO" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONTH_NO"/>
+      <keyMapping columnObjectName="Join_2" columnName="MONTH_NO"/>
+    </attribute>
+    <attribute id="MONTH" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONTH_NAME"/>
+      <keyMapping columnObjectName="Join_2" columnName="MONTH_NAME"/>
+    </attribute>
+    <attribute id="CUSTOMER_CODE" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_CODE_INT"/>
+      <keyMapping columnObjectName="Join_2" columnName="CUSTOMER_CODE_INT"/>
+    </attribute>
+    <attribute id="FINANCIAL_YEAR" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FINANCIAL_YEAR"/>
+      <keyMapping columnObjectName="Join_2" columnName="FINANCIAL_YEAR"/>
+    </attribute>
+    <attribute id="GPC_NAME" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GPC_NAME"/>
+      <keyMapping columnObjectName="Join_2" columnName="GPC_NAME"/>
+    </attribute>
+    <attribute id="CUSTOMER_NAME" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_NAME"/>
+      <keyMapping columnObjectName="Join_2" columnName="CUSTOMER_NAME"/>
+    </attribute>
+    <attribute id="BU_CODE" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BUCODE"/>
+      <keyMapping columnObjectName="Join_2" columnName="BUCODE"/>
+    </attribute>
+    <attribute id="SUB_DIV" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUBDIVISION"/>
+      <keyMapping columnObjectName="Join_2" columnName="SUBDIVISION"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="ACTUAL" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACTUAL"/>
+      <measureMapping columnObjectName="Join_2" columnName="ACTUAL"/>
+    </measure>
+    <measure id="ACTUAL_QUANTITY" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACTUAL_QUANTITY"/>
+      <measureMapping columnObjectName="Join_2" columnName="ACTUAL_QUANTITY"/>
+    </measure>
+    <measure id="TARGET" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TARGET"/>
+      <measureMapping columnObjectName="Join_2" columnName="TARGET"/>
+    </measure>
+    <measure id="DIFFERENCE" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="DIFFERENCE"/>
+      <measureMapping columnObjectName="Join_2" columnName="DIFFERENCE"/>
+    </measure>
+    <measure id="VOL_TARGET" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="VOL_TARGET"/>
+      <measureMapping columnObjectName="Join_2" columnName="VOL_TARGET"/>
+    </measure>
+    <measure id="VOL_DIFFERENCE" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="VOL_DIFFERENCE"/>
+      <measureMapping columnObjectName="Join_2" columnName="VOL_DIFFERENCE"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-215" y="587"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="175" y="577"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-215" y="443"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="149" y="433"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-55" y="269"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="186"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="210"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

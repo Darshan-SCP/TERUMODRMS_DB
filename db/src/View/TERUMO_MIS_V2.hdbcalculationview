@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TERUMODRMS_DB.db.View::TERUMO_MIS_V2" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="TERUMO_MIS_V2.hdbcalculationview"/>
+<localVariables>
+  <variable id="FIN_YEAR" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="13" mandatory="true" defaultValue="">
+      <valueDomain type="empty"/>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="Month" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="13" mandatory="true" defaultValue="">
+      <valueDomain type="empty"/>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_SALES_ASSOCIATES_TARGET">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_SALES_ASSOCIATES_TARGET</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_GRN">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_GRN</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS</resourceUri>
+  </DataSource>
+  <DataSource id="MIS_NONSTOCK$$$$TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="MIS_NONSTOCK$$$$TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_MIS_DATA">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_MIS_DATA</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="MIS_PLAN" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="APRIL"/>
+      <viewAttribute id="MAY"/>
+      <viewAttribute id="JUNE"/>
+      <viewAttribute id="JULY"/>
+      <viewAttribute id="AUGUST"/>
+      <viewAttribute id="SEPTEMBER"/>
+      <viewAttribute id="OCTOBER"/>
+      <viewAttribute id="NOVEMBER"/>
+      <viewAttribute id="DECEMBER"/>
+      <viewAttribute id="JANUARY"/>
+      <viewAttribute id="FEBRUARY"/>
+      <viewAttribute id="MARCH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(CURRENT_DATE) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(CURRENT_DATE, -1)), CONCAT('-',YEAR(CURRENT_DATE)))
+	 ELSE CONCAT(YEAR(CURRENT_DATE), CONCAT('-', YEAR(ADD_YEARS(CURRENT_DATE, 1))))
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(CURRENT_DATE)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH_NUMBER" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>MONTH(CURRENT_DATE)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="PLAN" datatype="DOUBLE" expressionLanguage="SQL">
+    
+        <formula>CASE $$Month$$
+	 WHEN 'JANUARY' then &quot;JANUARY&quot; 
+	 WHEN 'FEBRUARY' then &quot;FEBRUARY&quot; 
+	 WHEN 'MARCH' then &quot;MARCH&quot; 
+	 WHEN 'APRIL' then &quot;APRIL&quot; 
+	 WHEN 'MAY' then &quot;MAY&quot; 
+	 WHEN 'JUNE' then &quot;JUNE&quot; 
+	 WHEN 'JULY' then &quot;JULY&quot; 
+	 WHEN 'AUGUST' then &quot;AUGUST&quot; 
+	 WHEN 'SEPTEMBER' then &quot;SEPTEMBER&quot; 
+	 WHEN 'OCTOBER' then &quot;OCTOBER&quot; 
+	 WHEN 'NOVEMBER' then &quot;NOVEMBER&quot; 
+	 WHEN 'DECEMBER' then &quot;DECEMBER&quot; 
+	 ELSE 0 
+END</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_SALES_ASSOCIATES_TARGET">
+      <mapping xsi:type="Calculation:AttributeMapping" target="APRIL" source="MONTH1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAY" source="MONTH2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JUNE" source="MONTH3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JULY" source="MONTH4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGUST" source="MONTH5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SEPTEMBER" source="MONTH6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OCTOBER" source="MONTH7"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NOVEMBER" source="MONTH8"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DECEMBER" source="MONTH9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JANUARY" source="MONTH10"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FEBRUARY" source="MONTH11"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MARCH" source="MONTH12"/>
+    </input>
+    <filter>&quot;YEAR&quot; = $$FIN_YEAR$$</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="MIS_ORDER_INHAND" cardinality="CN_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PR_CREATION_DATE" aggregationType="min"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="TOTAL_AMOUNT" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$PR_NO$PR_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;PR_CREATION_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;PR_CREATION_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;PR_CREATION_DATE&quot;)))
+	 ELSE CONCAT(YEAR(&quot;PR_CREATION_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;PR_CREATION_DATE&quot;, 1))))
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(&quot;PR_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH_NUMBER" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>MONTH(&quot;PR_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PR_CREATION_DATE" source="PR_CREATION_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PR_NO$PR_NO" source="PR_NO"/>
+    </input>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_AMOUNT" source="TOTAL_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PR_NO$PR_NO" source="PR_NO"/>
+    </input>
+    <filter>&quot;FINANCIAL_YEAR&quot; = $$FIN_YEAR$$ AND &quot;MONTH&quot; = $$Month$$</filter>
+    <joinAttribute name="JOIN$PR_NO$PR_NO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:NonEquiJoinView" id="MIS_SIT" cardinality="C1_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="INVOICE_DATE"/>
+      <viewAttribute id="BUCODE"/>
+      <viewAttribute id="INVOICE_NO"/>
+      <viewAttribute id="TAXBASE_AMT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUCODE" source="BUCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_NO" source="INVOICE_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAXBASE_AMT" source="TAXBASE_AMT"/>
+    </input>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_GRN"/>
+    <joinAttribute leftColumn="INVOICE_NO" rightColumn="INVOICE_NO" operator="NE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="MIS_PIR" cardinality="CN_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PO_CREATION_DATE"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="TOTAL_AMOUNT" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$SAP_ORDER_NO$SAP_ORDER_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;PO_CREATION_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;PO_CREATION_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;PO_CREATION_DATE&quot;)))
+	 ELSE CONCAT(YEAR(&quot;PO_CREATION_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;PO_CREATION_DATE&quot;, 1))))
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(&quot;PO_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH_NUMBER" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>MONTH(&quot;PO_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_CREATION_DATE" source="PO_CREATION_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ORDER_NO$SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+    </input>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_AMOUNT" source="TOTAL_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ORDER_NO$SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+    </input>
+    <filter>&quot;FINANCIAL_YEAR&quot; = $$FIN_YEAR$$ AND &quot;MONTH&quot; = $$Month$$</filter>
+    <joinAttribute name="JOIN$SAP_ORDER_NO$SAP_ORDER_NO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="MIS_NONSTOCK" cardinality="CN_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="PR_CREATION_DATE" aggregationType="min"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="PR_STATUS"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="TOTAL_AMOUNT" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$PR_NO$PR_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;PR_CREATION_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;PR_CREATION_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;PR_CREATION_DATE&quot;)))
+	 ELSE CONCAT(YEAR(&quot;PR_CREATION_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;PR_CREATION_DATE&quot;, 1))))
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(&quot;PR_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH_NUMBER" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>MONTH(&quot;PR_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="MIS_NONSTOCK$$$$TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PR_CREATION_DATE" source="PR_CREATION_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PR_STATUS" source="PR_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PR_NO$PR_NO" source="PR_NO"/>
+    </input>
+    <input node="MIS_NONSTOCK$$$$TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_AMOUNT" source="TOTAL_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PR_NO$PR_NO" source="PR_NO"/>
+    </input>
+    <filter>&quot;FINANCIAL_YEAR&quot; = $$FIN_YEAR$$ AND &quot;MONTH&quot; = $$Month$$ AND 
+&quot;PR_STATUS&quot; = 3</filter>
+    <joinAttribute name="JOIN$PR_NO$PR_NO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="MIS_ForecastCN">
+    <viewAttributes>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="FORECAST_APRIL"/>
+      <viewAttribute id="FORECAST_MAY"/>
+      <viewAttribute id="FORECAST_JUNE"/>
+      <viewAttribute id="FORECAST_JULY"/>
+      <viewAttribute id="FORECAST_AUGUST"/>
+      <viewAttribute id="FORECAST_SEPTEMBER"/>
+      <viewAttribute id="FORECAST_OCTOBER"/>
+      <viewAttribute id="FORECAST_NOVEMBER"/>
+      <viewAttribute id="FORECAST_DECEMBER"/>
+      <viewAttribute id="FORECAST_JANUARY"/>
+      <viewAttribute id="FORECAST_FEBRUARY"/>
+      <viewAttribute id="FORECAST_MARCH"/>
+      <viewAttribute id="CN_APRIL"/>
+      <viewAttribute id="CN_MAY"/>
+      <viewAttribute id="CN_JUNE"/>
+      <viewAttribute id="CN_JULY"/>
+      <viewAttribute id="CN_AUGUST"/>
+      <viewAttribute id="CN_SEPTEMBER"/>
+      <viewAttribute id="CN_OCTOBER"/>
+      <viewAttribute id="CN_NOVEMBER"/>
+      <viewAttribute id="CN_DECEMBER"/>
+      <viewAttribute id="CN_JANUARY"/>
+      <viewAttribute id="CN_FEBRUARY"/>
+      <viewAttribute id="CN_MARCH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(CURRENT_DATE)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH_NUMBER" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>MONTH(CURRENT_DATE)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="FORECAST" datatype="DOUBLE" expressionLanguage="SQL">
+    
+        <formula>CASE $$Month$$
+	 WHEN 'JANUARY' then &quot;FORECAST_JANUARY&quot; 
+	 WHEN 'FEBRUARY' then &quot;FORECAST_FEBRUARY&quot; 
+	 WHEN 'MARCH' then &quot;FORECAST_MARCH&quot; 
+	 WHEN 'APRIL' then &quot;FORECAST_APRIL&quot; 
+	 WHEN 'MAY' then &quot;FORECAST_MAY&quot; 
+	 WHEN 'JUNE' then &quot;FORECAST_JUNE&quot; 
+	 WHEN 'JULY' then &quot;FORECAST_JULY&quot; 
+	 WHEN 'AUGUST' then &quot;FORECAST_AUGUST&quot; 
+	 WHEN 'SEPTEMBER' then &quot;FORECAST_SEPTEMBER&quot; 
+	 WHEN 'OCTOBER' then &quot;FORECAST_OCTOBER&quot; 
+	 WHEN 'NOVEMBER' then &quot;FORECAST_NOVEMBER&quot; 
+	 WHEN 'DECEMBER' then &quot;FORECAST_DECEMBER&quot; 
+	 ELSE 0 
+END</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CN_PROVISION" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE $$Month$$
+	 WHEN 'JANUARY' then &quot;CN_JANUARY&quot; 
+	 WHEN 'FEBRUARY' then &quot;CN_FEBRUARY&quot; 
+	 WHEN 'MARCH' then &quot;CN_MARCH&quot; 
+	 WHEN 'APRIL' then &quot;CN_APRIL&quot; 
+	 WHEN 'MAY' then &quot;CN_MAY&quot; 
+	 WHEN 'JUNE' then &quot;CN_JUNE&quot; 
+	 WHEN 'JULY' then &quot;CN_JULY&quot; 
+	 WHEN 'AUGUST' then &quot;CN_AUGUST&quot; 
+	 WHEN 'SEPTEMBER' then &quot;CN_SEPTEMBER&quot; 
+	 WHEN 'OCTOBER' then &quot;CN_OCTOBER&quot; 
+	 WHEN 'NOVEMBER' then &quot;CN_NOVEMBER&quot; 
+	 WHEN 'DECEMBER' then &quot;CN_DECEMBER&quot; 
+	 ELSE 0 
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_MIS_DATA">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_APRIL" source="FORECAST_MONTH1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MAY" source="FORECAST_MONTH2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_JUNE" source="FORECAST_MONTH3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_JULY" source="FORECAST_MONTH4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_AUGUST" source="FORECAST_MONTH5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_SEPTEMBER" source="FORECAST_MONTH6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_OCTOBER" source="FORECAST_MONTH7"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_NOVEMBER" source="FORECAST_MONTH8"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_DECEMBER" source="FORECAST_MONTH9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_JANUARY" source="FORECAST_MONTH10"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_FEBRUARY" source="FORECAST_MONTH11"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MARCH" source="FORECAST_MONTH12"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_APRIL" source="CN_MONTH1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_MAY" source="CN_MONTH2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_JUNE" source="CN_MONTH3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_JULY" source="CN_MONTH4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_AUGUST" source="CN_MONTH5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_SEPTEMBER" source="CN_MONTH6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_OCTOBER" source="CN_MONTH7"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_NOVEMBER" source="CN_MONTH8"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_DECEMBER" source="CN_MONTH9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_JANUARY" source="CN_MONTH10"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_FEBRUARY" source="CN_MONTH11"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_MARCH" source="CN_MONTH12"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="PL_AGG">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="MONTH_NUMBER"/>
+    
+      <viewAttribute id="PLAN" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="MIS_PLAN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="MIS_OIH_AGG">
+    <viewAttributes>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="TOTAL_AMOUNT" aggregationType="sum"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="MONTH_NUMBER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="MIS_ORDER_INHAND"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="MIS_SIT_AGG" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="INVOICE_DATE"/>
+      <viewAttribute id="BUCODE"/>
+      <viewAttribute id="SALE_IN_TRANSIT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;INVOICE_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;INVOICE_DATE&quot;)))
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 4 AND 12 
+	 THEN CONCAT(YEAR(&quot;INVOICE_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;INVOICE_DATE&quot;, 1))))
+	 WHEN (MONTH(&quot;INVOICE_DATE&quot;) is null) AND MONTH(CURRENT_DATE) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(CURRENT_DATE, -1)), CONCAT('-',YEAR(CURRENT_DATE)))
+	 ELSE CONCAT(YEAR(CURRENT_DATE), CONCAT('-', YEAR(ADD_YEARS(CURRENT_DATE, 1))))
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTHNAME(&quot;INVOICE_DATE&quot;) is null
+	 THEN ($$Month$$)
+	 ELSE MONTHNAME(&quot;INVOICE_DATE&quot;)
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH_NUMBER" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>MONTH(&quot;INVOICE_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="MIS_SIT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALE_IN_TRANSIT" source="TAXBASE_AMT"/>
+    </input>
+    <filter>&quot;FINANCIAL_YEAR&quot; = $$FIN_YEAR$$ AND &quot;MONTH&quot; = $$Month$$</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="MIS_PIR_AGG">
+    <viewAttributes>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="PI_RAISED" aggregationType="sum"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="MONTH_NUMBER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="MIS_PIR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PI_RAISED" source="TOTAL_AMOUNT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="MIS_NONSTCK_AGG">
+    <viewAttributes>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="PR_STATUS"/>
+      <viewAttribute id="NON_STOCK" aggregationType="sum"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="MONTH_NUMBER"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="MIS_NONSTOCK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="NON_STOCK" source="TOTAL_AMOUNT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="PL_OIH_JOIN" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="ORDER_IN_HAND" aggregationType="sum"/>
+      <viewAttribute id="PLAN" aggregationType="sum"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="MONTH_NUMBER" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="PL_AGG">
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN" source="PLAN"/>
+    </input>
+    <input node="MIS_OIH_AGG">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_IN_HAND" source="TOTAL_AMOUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH_NUMBER" source="MONTH_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+    </input>
+    <joinAttribute name="YEAR"/>
+    <joinAttribute name="BU_CODE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="SIT_PIR_JOIN" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="BUCODE"/>
+      <viewAttribute id="PI_RAISED" aggregationType="sum"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="SALE_IN_TRANSIT" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$MONTH$MONTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="MIS_PIR_AGG">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PI_RAISED" source="PI_RAISED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUCODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MONTH$MONTH" source="MONTH"/>
+    </input>
+    <input node="SIT_AGG">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALE_IN_TRANSIT" source="SALE_IN_TRANSIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MONTH$MONTH" source="MONTH"/>
+    </input>
+    <joinAttribute name="FINANCIAL_YEAR"/>
+    <joinAttribute name="JOIN$MONTH$MONTH"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="SIT_PIR_NONSTCK" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="BUCODE"/>
+      <viewAttribute id="PI_RAISED" aggregationType="sum"/>
+      <viewAttribute id="NON_STOCK" aggregationType="sum"/>
+      <viewAttribute id="SALE_IN_TRANSIT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="SIT_PIR_JOIN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUCODE" source="BUCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PI_RAISED" source="PI_RAISED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALE_IN_TRANSIT" source="SALE_IN_TRANSIT"/>
+    </input>
+    <input node="MIS_NONSTCK_AGG">
+      <mapping xsi:type="Calculation:AttributeMapping" target="NON_STOCK" source="NON_STOCK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BUCODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+    </input>
+    <joinAttribute name="BUCODE"/>
+    <joinAttribute name="FINANCIAL_YEAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="ForecastCN_AGG">
+    <viewAttributes>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="MONTH_NUMBER"/>
+    
+      <viewAttribute id="FORECAST" aggregationType="sum"/>
+      <viewAttribute id="CN_PROVISION" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="MIS_ForecastCN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="FORECAST_PL_OIH" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="ORDER_IN_HAND" aggregationType="sum"/>
+      <viewAttribute id="PLAN" aggregationType="sum"/>
+      <viewAttribute id="FORECAST" aggregationType="sum"/>
+      <viewAttribute id="CN_PROVISION" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="ForecastCN_AGG">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST" source="FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_PROVISION" source="CN_PROVISION"/>
+    </input>
+    <input node="PL_OIH_JOIN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_IN_HAND" source="ORDER_IN_HAND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN" source="PLAN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="YEAR"/>
+    </input>
+    <joinAttribute name="BU_CODE"/>
+    <joinAttribute name="FINANCIAL_YEAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="FINAL_JOIN" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="PLAN" aggregationType="sum"/>
+      <viewAttribute id="FORECAST" aggregationType="sum"/>
+      <viewAttribute id="ORDER_IN_HAND" aggregationType="sum"/>
+      <viewAttribute id="PI_RAISED" aggregationType="sum"/>
+      <viewAttribute id="NON_STOCK" aggregationType="sum"/>
+      <viewAttribute id="CN_PROVISION" aggregationType="sum"/>
+      <viewAttribute id="SALE_IN_TRANSIT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="AVAILABLE_FOR_BILLING" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+WHEN (&quot;PI_RAISED&quot;) IS NOT NULL AND (&quot;NON_STOCK&quot;) IS NOT NULL
+THEN (&quot;PI_RAISED&quot; - &quot;NON_STOCK&quot;)
+WHEN (&quot;PI_RAISED&quot;) IS NULL AND (&quot;NON_STOCK&quot;) IS NOT NULL
+THEN ( 0 - &quot;NON_STOCK&quot; )
+WHEN (&quot;PI_RAISED&quot;) IS NOT NULL AND (&quot;NON_STOCK&quot;) IS NULL
+THEN ( &quot;PI_RAISED&quot; - 0 )
+ELSE 0
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MTD_GROSS_SALE" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+WHEN (&quot;AVAILABLE_FOR_BILLING&quot;) IS NOT NULL AND (&quot;SALE_IN_TRANSIT&quot;) IS NOT NULL
+THEN (&quot;AVAILABLE_FOR_BILLING&quot; - &quot;SALE_IN_TRANSIT&quot;)
+WHEN (&quot;AVAILABLE_FOR_BILLING&quot;) IS NULL AND (&quot;SALE_IN_TRANSIT&quot;) IS NOT NULL
+THEN ( 0 - &quot;SALE_IN_TRANSIT&quot; )
+WHEN (&quot;AVAILABLE_FOR_BILLING&quot;) IS NOT NULL AND (&quot;SALE_IN_TRANSIT&quot;) IS NULL
+THEN ( &quot;AVAILABLE_FOR_BILLING&quot; - 0 )
+ELSE 0
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="NET_SALES" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+WHEN (&quot;MTD_GROSS_SALE&quot;) IS NOT NULL AND (&quot;CN_PROVISION&quot;) IS NOT NULL
+THEN (&quot;MTD_GROSS_SALE&quot; - &quot;CN_PROVISION&quot;)
+WHEN (&quot;MTD_GROSS_SALE&quot;) IS NULL AND (&quot;CN_PROVISION&quot;) IS NOT NULL
+THEN ( 0 - &quot;CN_PROVISION&quot; )
+WHEN (&quot;MTD_GROSS_SALE&quot;) IS NOT NULL AND (&quot;CN_PROVISION&quot;) IS NULL
+THEN ( &quot;MTD_GROSS_SALE&quot; - 0 )
+ELSE 0
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PERCENT_TO_PLAN" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+WHEN (&quot;MTD_GROSS_SALE&quot;) IS NOT NULL AND (&quot;MTD_GROSS_SALE&quot;) &gt; 0  AND (&quot;PLAN&quot;) IS NOT NULL AND (&quot;PLAN&quot;) &gt; 0
+THEN ((&quot;MTD_GROSS_SALE&quot; / &quot;PLAN&quot;) * 100)
+ELSE 0
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PERCENT_TO_FC" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+WHEN (&quot;NET_SALES&quot;) IS NOT NULL AND (&quot;NET_SALES&quot;) &gt;  0 AND (&quot;FORECAST&quot;) IS NOT NULL AND (&quot;FORECAST&quot;) &gt; 0
+THEN ((&quot;NET_SALES&quot; / &quot;FORECAST&quot;) * 100)
+ELSE 0
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PI_OPEN_FOR_PAYMENT" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+WHEN (&quot;PI_RAISED&quot;) IS NOT NULL AND (&quot;AVAILABLE_FOR_BILLING&quot;) IS NOT NULL
+THEN (&quot;PI_RAISED&quot; - &quot;AVAILABLE_FOR_BILLING&quot;)
+WHEN (&quot;PI_RAISED&quot;) IS NULL AND (&quot;AVAILABLE_FOR_BILLING&quot;) IS NOT NULL
+THEN ( 0 - &quot;AVAILABLE_FOR_BILLING&quot; )
+WHEN (&quot;PI_RAISED&quot;) IS NOT NULL AND (&quot;AVAILABLE_FOR_BILLING&quot;) IS NULL
+THEN ( &quot;PI_RAISED&quot; - 0 )
+ELSE 0
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="GAP_TO_FC" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+WHEN (&quot;NET_SALES&quot;) &gt; (&quot;FORECAST&quot;)
+THEN 0
+ELSE (&quot;FORECAST&quot; - (&quot;NET_SALES&quot; + &quot;PI_OPEN_FOR_PAYMENT&quot;))
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="FORECAST_PL_OIH">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_IN_HAND" source="ORDER_IN_HAND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PLAN" source="PLAN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST" source="FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CN_PROVISION" source="CN_PROVISION"/>
+    </input>
+    <input node="SIT_PIR_NONSTCK">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PI_RAISED" source="PI_RAISED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NON_STOCK" source="NON_STOCK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALE_IN_TRANSIT" source="SALE_IN_TRANSIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BUCODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+    </input>
+    <joinAttribute name="BU_CODE"/>
+    <joinAttribute name="FINANCIAL_YEAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="SIT_AGG">
+    <viewAttributes>
+      <viewAttribute id="BUCODE"/>
+      <viewAttribute id="SALE_IN_TRANSIT" aggregationType="sum"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="MIS_SIT_AGG"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="FINAL_JOIN">
+  <attributes>
+    <attribute id="BU_CODE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BU_CODE"/>
+      <keyMapping columnObjectName="FINAL_JOIN" columnName="BU_CODE"/>
+    </attribute>
+    <attribute id="FINANCIAL_YEAR" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FINANCIAL_YEAR"/>
+      <keyMapping columnObjectName="FINAL_JOIN" columnName="FINANCIAL_YEAR"/>
+    </attribute></attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="PLAN" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PLAN"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="PLAN"/>
+    </measure>
+    <measure id="FORECAST" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="FORECAST"/>
+    </measure>
+    <measure id="ORDER_IN_HAND" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TOTAL_AMOUNT"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="ORDER_IN_HAND"/>
+    </measure>
+    <measure id="PI_RAISED" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TOTAL_AMOUNT"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="PI_RAISED"/>
+    </measure>
+    <measure id="NON_STOCK" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TOTAL_AMOUNT"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="NON_STOCK"/>
+    </measure>
+    <measure id="AVAILABLE_FOR_BILLING" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="AVAILABLE_FOR_BILLING"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="AVAILABLE_FOR_BILLING"/>
+    </measure>
+    <measure id="CN_PROVISION" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CN_PROVISION"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="CN_PROVISION"/>
+    </measure>
+    <measure id="MTD_GROSS_SALE" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="MTD_GROSS_SALE"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="MTD_GROSS_SALE"/>
+    </measure>
+    <measure id="NET_SALES" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="NET_SALES"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="NET_SALES"/>
+    </measure>
+    <measure id="PERCENT_TO_PLAN" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PERCENT_TO_PLAN"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="PERCENT_TO_PLAN"/>
+    </measure>
+    <measure id="PERCENT_TO_FC" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PERCENT_TO_FC"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="PERCENT_TO_FC"/>
+    </measure>
+    <measure id="PI_OPEN_FOR_PAYMENT" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PI_OPEN_FOR_PAYMENT"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="PI_OPEN_FOR_PAYMENT"/>
+    </measure>
+    <measure id="GAP_TO_FC" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="GAP_TO_FC"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="GAP_TO_FC"/>
+    </measure>
+  
+    <measure id="SALE_IN_TRANSIT" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SALE_IN_TRANSIT"/>
+      <measureMapping columnObjectName="FINAL_JOIN" columnName="SALE_IN_TRANSIT"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="675" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="MIS_PLAN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="326" y="856"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_ORDER_INHAND" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="536" y="856"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER" modelObjectNameSpace="MIS_ORDER_INHAND" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="83" y="34"/>
+      <rectangleSize width="374"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS" modelObjectNameSpace="MIS_ORDER_INHAND" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="573" y="27"/>
+      <rectangleSize width="360"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_SIT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1169" y="1024"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER" modelObjectNameSpace="MIS_SIT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="407"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_GRN" modelObjectNameSpace="MIS_SIT" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="526" y="44"/>
+      <rectangleSize width="327"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_PIR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="947" y="856"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER" modelObjectNameSpace="MIS_PIR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="375"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS" modelObjectNameSpace="MIS_PIR" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="477" y="31"/>
+      <rectangleSize width="361"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_NONSTOCK" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="746" y="696"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER" modelObjectNameSpace="MIS_NONSTOCK" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="374"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS" modelObjectNameSpace="MIS_NONSTOCK" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="458" y="30"/>
+      <rectangleSize width="360"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_ForecastCN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="696"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PL_AGG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="326" y="714"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_OIH_AGG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="536" y="714"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_SIT_AGG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1169" y="856"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_PIR_AGG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="956" y="714"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="MIS_NONSTCK_AGG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="751" y="554"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PL_OIH_JOIN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="440" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="PL_AGG" modelObjectNameSpace="PL_OIH_JOIN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="180"/>
+    </shape>
+    <shape modelObjectName="MIS_OIH_AGG" modelObjectNameSpace="PL_OIH_JOIN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="180"/>
+    </shape>
+    <shape expanded="true" modelObjectName="SIT_PIR_JOIN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="974" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="MIS_PIR_AGG" modelObjectNameSpace="SIT_PIR_JOIN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="184"/>
+    </shape>
+    <shape modelObjectName="SIT_AGG" modelObjectNameSpace="SIT_PIR_JOIN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="369" y="40"/>
+      <rectangleSize width="184.419921875"/>
+    </shape>
+    <shape expanded="true" modelObjectName="SIT_PIR_NONSTCK" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="778" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="SIT_PIR_JOIN" modelObjectNameSpace="SIT_PIR_NONSTCK" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="61" y="-11"/>
+      <rectangleSize width="184"/>
+    </shape>
+    <shape modelObjectName="MIS_NONSTCK_AGG" modelObjectNameSpace="SIT_PIR_NONSTCK" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="390" y="-5"/>
+      <rectangleSize width="185"/>
+    </shape>
+    <shape expanded="true" modelObjectName="ForecastCN_AGG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="544"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="FORECAST_PL_OIH" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="413" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="ForecastCN_AGG" modelObjectNameSpace="FORECAST_PL_OIH" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="222"/>
+    </shape>
+    <shape modelObjectName="PL_OIH_JOIN" modelObjectNameSpace="FORECAST_PL_OIH" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="221"/>
+    </shape>
+    <shape expanded="true" modelObjectName="FINAL_JOIN" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="675" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="FORECAST_PL_OIH" modelObjectNameSpace="FINAL_JOIN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="-7" y="-134"/>
+      <rectangleSize width="308"/>
+    </shape>
+    <shape modelObjectName="SIT_PIR_NONSTCK" modelObjectNameSpace="FINAL_JOIN" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="382" y="4"/>
+      <rectangleSize width="180"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="SIT_AGG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1184" y="715"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

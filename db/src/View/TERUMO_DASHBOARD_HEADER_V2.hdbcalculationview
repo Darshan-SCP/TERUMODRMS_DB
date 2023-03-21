@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TERUMODRMS_DB.db.View::TERUMO_DASHBOARD_HEADER_V2" applyPrivilegeType="NONE" dataCategory="DIMENSION" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="TERUMO_DASHBOARD_HEADER"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PR_Submitted" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="PR_STATUS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER"/>
+    <filter>&quot;PR_STATUS&quot;='4'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="PR_STATUS" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="PR_Submitted"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PO_Completed" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="PO_STATUS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER"/>
+    <filter>&quot;PO_STATUS&quot;='7'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="PO_STATUS" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="PO_Completed"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Payments_Done" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="POP_STATUS"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="PAY_STATUS" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>TO_NVARCHAR(&quot;POP_STATUS&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS"/>
+    <filter>&quot;POP_STATUS&quot;='13'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="PAY_STATUS" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Payments_Done"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_1" cardinality="C1_1" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Aggregation_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PO_STATUS"/>
+      <viewAttribute id="PAY_STATUS"/>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_STATUS" source="PO_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+    </input>
+    <input node="Aggregation_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAY_STATUS" source="PAY_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+    </input>
+    <joinAttribute name="DISTRIBUTOR_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_2" cardinality="C1_1" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Aggregation_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PO_STATUS"/>
+      <viewAttribute id="PAY_STATUS"/>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="PR_STATUS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PR_STATUS" source="PR_STATUS"/>
+    </input>
+    <input node="Join_1_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_STATUS" source="PO_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PAY_STATUS" source="PAY_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+    </input>
+    <joinAttribute name="DISTRIBUTOR_ID"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1_2">
+  <attributes>
+    <attribute id="DISTRIBUTOR_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DISTRIBUTOR_ID"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="DISTRIBUTOR_ID"/>
+    </attribute>
+    <attribute id="PR_STATUS" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PR_STATUS"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="PR_STATUS"/>
+    </attribute>
+    <attribute id="PO_STATUS" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PO_STATUS"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="PO_STATUS"/>
+    </attribute>
+    <attribute id="PAY_STATUS" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PAY_STATUS"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="PAY_STATUS"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="PR_Submitted" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-149" y="409"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-149" y="330"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PO_Completed" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="40" y="409"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="43" y="330"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Payments_Done" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="232" y="409"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="235" y="330"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="172"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="177"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="177"/>
+    </shape>
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="177"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,741 @@
+service{
+    
+        //Views
+       /*  "TERUMODRMS_DB.db.View::TERUMO_DIST_ACTUALS" as "DistActualReport"
+        keys generate local "ID"
+        aggregates always(
+         SUM of "ACTUAL",
+         SUM of "TARGET",
+         SUM of "DIFFERENCE",
+         SUM of "ACTUAL_QUANTITY",
+         SUM of "VOL_TARGET",
+         SUM of "VOL_DIFFERENCE"); */
+         
+        /*  "TERUMODRMS_DB.db.View::CopyOfTERUMO_DIST_ACTUALS" as "DistActualData"
+        keys generate local "ID"
+        aggregates always(
+         SUM of "ACTUAL",
+         SUM of "TARGET",
+         SUM of "DIFFERENCE",
+         SUM of "ACTUAL_QUANTITY",
+         SUM of "VOL_TARGET",
+         SUM of "VOL_DIFFERENCE"); */
+         
+        /*  "TERUMODRMS_DB.db.View::TERUMO_SA_ACTUALS" as "SalesAssoActualReport"
+        keys generate local "ID" 
+        aggregates always(
+         SUM of "ACTUAL",
+         SUM of "TARGET",
+         SUM of "DIFFERENCE",
+         SUM of "ACTUAL_QUANTITY",
+         SUM of "VOL_TARGET",
+         SUM of "VOL_DIFFERENCE"); */
+         
+       /*   "TERUMODRMS_DB.db.View::TERUMO_DASHBOARD_HEADER_V2" as "DashboardHeader" keys("DISTRIBUTOR_ID")
+          navigates (
+                 "AssoSalesAssoInfo" as "SaInfo"
+        ); */
+        
+       /*  "TERUMODRMS_DB.db.View::TERUMO_GPC_MASTER" as "GPCMaster" keys generate local "ID"; */
+        
+        //MIS Report View
+        /*  "TERUMODRMS_DB.db.View::TERUMO_MIS_V2" as "MISReport_V2"
+         keys generate local "ID"
+         aggregates always(
+         SUM of "PLAN",
+         SUM of "FORECAST",
+         SUM of "ORDER_IN_HAND",
+         SUM of "PI_RAISED",
+         SUM of "NON_STOCK",
+         SUM of "AVAILABLE_FOR_BILLING",
+         SUM of "CN_PROVISION",
+         SUM of "SALE_IN_TRANSIT",
+         SUM of "MTD_GROSS_SALE",
+         SUM of "NET_SALES",
+         SUM of "PERCENT_TO_PLAN",
+         SUM of "PERCENT_TO_FC",
+         SUM of "PI_OPEN_FOR_PAYMENT",
+         SUM of "GAP_TO_FC")
+         parameters via entity "MISInputParams" results property "Execute"; */
+         
+        /*  "TERUMODRMS_DB.db.View::TERUMO_MIS_DIST" as "MISReport_DRILLDOWN"
+         keys generate local "ID"
+         aggregates always(
+         SUM of "ORDER_IN_HAND",
+         SUM of "PI_RAISED",
+         SUM of "NON_STOCK",
+         SUM of "EXPECTED_MONTH_VALUE",
+         SUM of "AVAILABLE_FOR_BILLING",
+         SUM of "SALE_IN_TRANSIT",
+         SUM of "GROSS_SALE",
+         SUM of "TOTAL_BO_VALUE")
+         parameters via entity "MISDInputParams" results property "Execute"; */
+         
+         
+         //Payment F4 - Added Kaustubh 09.08.2021
+        /*  "TERUMODRMS_DB.db.View::TERUMO_PAYMENT_F4" as "Payment_F4" keys("DISTRIBUTOR_ID")
+          navigates (
+               "AssoPayf4DistributorDetails" as "PayDistributorDetails",
+                "AssoPayf4HeaderOtype"   as "PayHeaderOtype"
+         ); */
+        
+        //Payment View for Approvals adding Amount 08.11.2021
+        /* "TERUMODRMS_DB.db.View::TERUMO_PAYMENT_APPROVAL_PAGE" as "Payment_Approval" keys("DISTRIBUTOR_ID")
+          navigates (
+                "AssoPayAppDistributorDetails" as "PayAppDistributorDetails",
+                "AssoPayAppHeaderOtype"   as "PayAppHeaderOtype",
+                "AssoPayAppStatus"   as "PayAppStatus"
+        ); */
+        
+        /*  "TERUMODRMS_DB.db.View::newTERUMO_DSB_COUNTS" as "DSB_COUNT_VIEW"
+         keys generate local "ID"
+         aggregates always(
+         SUM of "NO_OPEN_SO",
+         SUM of "NO_OF_BACK_ORDER",
+         SUM of "NO_OF_PAYMENTS",
+         SUM of "NO_OF_PI")
+         parameters via entity "DSBCInputParams" results property "Execute"; */
+         
+         /*  "TERUMODRMS_DB.db.View::TERUMO_DSB_SO_COUNTS" as "DSB_SO_COUNT_VIEW"
+         keys generate local "ID"
+         aggregates always(
+         SUM of "NO_OPEN_SO")
+         parameters via entity "DSBCSOInputParams" results property "Execute"; */
+         
+         /*  "TERUMODRMS_DB.db.View::TERUMO_DSB_PI_COUNTS" as "DSB_PI_COUNT_VIEW"
+         keys generate local "ID"
+         aggregates always(
+         SUM of "NO_OF_PI")
+         parameters via entity "DSBCPIInputParams" results property "Execute"; */
+         
+         /* "TERUMODRMS_DB.db.View::TERUMO_DSB_PAY_COUNTS" as "DSB_PAY_COUNT_VIEW"
+         keys generate local "ID"
+         aggregates always(
+         SUM of "NO_OF_PAYMENTS")
+         parameters via entity "DSBCPAYInputParams" results property "Execute"; */
+         
+        /* "TERUMODRMS_DB.db.View::TERUMO_MGMT_CRCOUNTS" as "MGMT_CN_VIEW"
+        keys generate local "ID"
+        aggregates always(
+        SUM of "CN_PROCESSED",
+        SUM of "CN_IN_PROCESS",
+        SUM of "CN_REJECTED"); */
+        
+       /*  "TERUMODRMS_DB.db.View::TERUMO_MGMT_COUNTS" as "MGMT_COUNT_VIEW"
+         keys generate local "ID"
+        aggregates always(
+        SUM of "TOTAL",
+        SUM of "BACK_ORDER"); */
+         
+       /*   "TERUMODRMS_DB.db.View::TERUMO_DSB_BACKORDER_COUNTS" as "DSB_BACKORDER_COUNT_VIEW"
+         keys generate local "ID"
+         aggregates always(
+         SUM of "NO_OF_BACK_ORDER")
+         parameters via entity "DSBCBACKInputParams" results property "Execute"; */
+         
+         
+         /*"TERUMODRMS_DB.db.View::TERUMO_DSB_CRCOUNTS" as "DSB_CN_VIEW"
+         keys generate local "ID"
+         aggregates always(
+         SUM of "CN_PROCESSED",
+         SUM of "CN_IN_PROCESS",
+         SUM of "CN_REJECTED",
+         SUM of "CN_PROCESSED_AMOUNT",
+         SUM of "CN_IN_PROCESS_AMOUNT")
+         parameters via entity "DSBCNInputParams" results property "Execute"; */
+         
+         
+         
+         
+         //GRN VIEWS
+         /* "TERUMODRMS_DB.db.View::TERUMO_GRN_COUNT" as "GRN_REPORT_COUNT" keys("DISTRIBUTOR_ID")
+          navigates (
+                "AssoGrnDist" as "GrnDistdetails"
+        );
+        "TERUMODRMS_DB.db.View::TERUMO_GRN_DRILLDOWN" as "GRN_REPORT_DRILLDOWN" keys("CUSTOMER_CODE");
+          navigates (
+                "AssoGrnMats" as "GrnMatdetails"
+        ); */
+        
+        
+        //TAT Claim View
+         /* "TERUMODRMS_DB.db.View::TERUMO_TAT_CLAIMS" as "TAT_CLAIMS" keys("CR_NO"); */
+         
+         //Control Report 05.04.2022 - Kaustubh
+         /* "TERUMODRMS_DB.db.View::TERUMO_CONTROL_RPT" as "PaymentControlReport" keys generate local "ID"; */
+         
+        
+        //Dashboard Views
+        //Swaroop Views
+        /* "TERUMODRMS_DB.db.View::TERUMO_CLAIM_IRIS_REPORT" as "ClaimIrisReport" keys generate local "ID"; */
+        /* "TERUMODRMS_DB.db.View::TERUMO_BACKORDER_REPORT" as "BackorderReport" keys generate local "ID"; */
+    
+        //Masters
+        "TERUMODRMS_DB.db.Tables::TERUMO_ORDER_TYPE" as "OrderTypeMaster";
+        "TERUMODRMS_DB.db.Tables::TERUMO_BUSINESS_UNIT_MASTER" as "BuMaster";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_FACTORY_MASTER" as "FactoryMaster";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_CUSTOMER_MASTER" as "CustomerMaster";
+        "TERUMODRMS_DB.db.Tables::TERUMO_ROLE_MASTER" as "RoleMaster";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_FORM_MASTER" as "FormMaster";
+        //"TERUMODRMS_DB.db.Tables::TERUMO_CUSTOMER_TO_SALES_REP_AND_BU" as "CustSRBUMapping";
+        "TERUMODRMS_DB.db.Tables::TERUMO_SALESHIER_SUBDIV" as "SalesToSubDiv";
+        "TERUMODRMS_DB.db.Tables::TERUMO_BU_SUB_DIV_MASTER" as "SubDivMaster";
+        "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER" as "UserMaster"
+        navigates (
+                "AssoRoleDesc" as "RoleDesc"
+        );
+        //"TERUMODRMS_DB.db.Tables::TERUMO_KIT_MASTER" as "KitMaster";
+        //"TERUMODRMS_DB.db.Tables::TERUMO_KIT_SECONDARY_MASTER" as "SecKitMaster";
+        "TERUMODRMS_DB.db.Tables::TERUMO_KIT_DISCOUNT_MASTER" as "KitDiscMaster";
+        "TERUMODRMS_DB.db.Tables::TERUMO_PR_EVENT_MASTER" as "PrEventMaster";
+        "TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS_EVENT_MASTER" as "PayEventMaster";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_HOSPITAL_MASTER" as "HospitalMaster"
+         navigates (
+                "AssoDistDesc" as "DistDesc"
+        );
+        
+        //"TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TO_HOSPITAL" as "DistToHospital";
+        "TERUMODRMS_DB.db.Tables::TERUMO_STATUS_MASTER" as "StatusMaster";
+        "TERUMODRMS_DB.db.Tables::TERUMO_ATTACHMENT_TYPE" as "AttachTypes";
+        "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_TYPE" as "ClaimType";
+        "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_AND_ATTACH_TYPE_MAPPING" as "ClaimAttachMap";
+        "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_ATTACHMENTS" as "ClaimAttachments";
+        "TERUMODRMS_DB.db.Tables::TERUMO_RGA_EVENT_MASTER" as "RgaEventMaster";  //Added By Siddhesh on 24Feb2021
+        "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_EVENT_MASTER" as "CrEventMaster";  //Added By Siddhesh on 05Mar2021
+        "TERUMODRMS_DB.db.Tables::TERUMO_PPR_EVENT_MASTER" as "PprEventMaster";  //Added By Siddhesh on 01Apr2021
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_EVENT_MASTER" as "DistEventMaster";  //Added By Siddhesh on 26Apr2021
+        //Targets
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TARGET" as "DistributorTarget";
+        "TERUMODRMS_DB.db.Tables::TERUMO_SALES_ASSOCIATES_TARGET" as "SalesAssociatesTarget";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_MATERIEL_MASTER" as "MaterielMaster"
+        navigates (
+                "AssoSchemeMaster" as "scheme"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_RGA_MATRIX" as "RgaMatrix"
+        navigates (
+                "AssoRgaMatrixDesc" as "RgaDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_MATRIX" as "ClaimMatrix"
+        navigates (
+                "AssoClaimMatrixDesc" as "ClaimsDesc"
+        );
+        
+            "TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS_MATRIX" as "PaymentsMatrix"
+            navigates (
+                            "AssoPaymentsMatrixDesc" as "PaymentsDesc"
+            );
+            
+            //For Consignment Order Matrix Terumo CR Kaustubh- 23.03.2022
+            "TERUMODRMS_DB.db.Tables::TERUMO_CONSIGNMENT_ORDER_MATRIX" as "ConsignmentMatrix"
+            navigates (
+                            "AssoConsignMatrixDesc" as "ConsignmentDesc"
+            );
+            
+            "TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER" as "InvoiceMaster";
+            //Master for Payment Method for Control Reports-- Kaustubh 11.03.2022 Terumo CR
+            "TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS_METHOD_MASTER" as "PayMethodMaster";
+            "TERUMODRMS_DB.db.Tables::TERUMO_CURRENCY_MASTER" as "CurrencyMaster";
+                
+            
+        
+        //Transaction Tables
+        "TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER" as "PRHeader"
+        navigates (
+                "AssoPrHeaderDistributor" as "PrHeaderDistributor",
+                "AssoDistributorDetails" as "PrDistributorDetails",
+                "AssoPrHeaderStatus"   as "PrHeaderStatus",
+                "AssoPrHeaderBU"   as "PrHeaderBu",
+                "AssoPrItems"   as "PrHItems",
+                "AssoPrHistory"   as "PrHistory",
+                "AssoPrHeaderOtype"   as "PrHeaderOtype",
+                "AssoPrEventsComm"   as "PrEventsComm",
+                "AssoPrDelNo"   as "PrDelNo"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS" as "PRItems"
+         navigates (
+                "AssoPrItemDesc" as "PrItemDesc"
+        );
+        "TERUMODRMS_DB.db.Tables::TERUMO_PR_EVENTS_COMMENTS" as "PrEventComms"
+        navigates (
+                "AssoPrEventsCommDesc" as "PrEventDesc"
+        );
+        
+        //Adding association for PR Evens for SO Cancellation 14.03.2022 -- Kaustubh
+        "TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER" as "POHeader"
+        navigates (
+                "AssoPoHeaderDistributor" as "PoHeaderDistributor",
+                "AssoPoDistributorDetails" as "PoDistributorDetails",
+                "AssoPoHeaderStatus"   as "PoHeaderStatus",
+                "AssoPoHeaderBU"   as "PoHeaderBu",
+                "AssoPoHeaderOtype"   as "PoHeaderOtype",
+                "AssoPoItems"   as "PoHItems",
+                "AssoPoEventsComm"   as "PoEventsComm",
+                "AssoPoDelStatus"   as "PoDelStatus"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS" as "POItems"
+         navigates (
+                "AssoPoItemDesc" as "PoItemDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TO_HOSPITAL" as "DistToHospital"
+        navigates (
+                "AssoHospDetails" as "HospDetails"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_CUSTOMER_TO_SALES_REP_AND_BU" as "CustSRBUMapping"
+        navigates (
+                "AssoSrDetails" as "SrDetails"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TO_BU_SUBDIV" as "DistToBuSubDiv"
+        navigates (
+                "AssoCrBuDesc" as "BuDesc",
+                "AssoCrBuSubDesc" as "BuSubDesc",
+                "AssoCrSalesHier" as "SalesHier"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_SALESHIER_SUBDIV" as "SalesToSubDiv"
+        navigates (
+                "AssoSADesc" as "SADesc",
+                "AssoSMDesc" as "SMDesc",
+                "AssoRHDesc" as "RHDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_KIT_PRIMARY_MASTER" as "KitMasterPrimary"
+            navigates (
+                "AssoKitMaster" as "KitCodeSecondary"
+        );
+        "TERUMODRMS_DB.db.Tables::TERUMO_KIT_SECONDARY_MASTER" as "KitMasterSecondary";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER" as "RgaHeader"
+            navigates (
+                            "AssoRgaUserDesc" as "UserDesc",
+                "AssoStatustMaster" as "RGAStatus",
+                "AssoBuDesc" as "BuDesc",
+                "AssoRGAItems" as "RgaHItems"
+        );
+        "TERUMODRMS_DB.db.Tables::TERUMO_RGA_ITEMS" as "RgaItems"
+        navigates (
+                            "AssoRgaItemDesc" as "ItemDesc"
+        );
+        
+        //Terumo CR- Kaustubh Adding Association to Hospital Master 21.02.2022
+        "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_HEADER" as "CrHeader"
+            navigates (
+                            "AssoCrUserDesc" as "UserDesc",
+                            "AssoCrStatus" as "StatusDesc",
+                            "AssoCrTypeDesc" as "ClaimTypeDesc",
+                "AssoCrItems" as "CrHItems",
+                "AssoClhIHospitalDesc" as "ClHospitalDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_ITEMS" as "CrItems"
+        navigates (
+                            "AssoCrIHospitalDesc" as "CrIHospitalDesc",
+                            "AssoCrItemDesc" as "CrItemDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_PPR_PROCESS" as "PprProcess"
+            navigates (
+                            "AssoPprUserDesc" as "UserDesc",
+                            "AssoPprProCodeDesc" as "ProdCodeDesc",
+                            "AssoPprStatus" as "StatusDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_PPR_ATTACHMENTS" as "PprAttachments";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_REGISTRATION" as "DistRegistration";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_ONBOARDING" as "DistOnboarding"
+        navigates (
+                            "AssoDistStatus" as "StatusDesc",
+                            "AssoDistSaDesc" as "SaDesc"
+        );
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_ADDRESS_TYPE" as "DistAddressType";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_ADDRESS" as "DistAddressDetails";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_BRANCH_SISTER_WH" as "DistBrWhDetails";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_ATTACHMENTS" as "DistAttachments"
+        navigates (
+                            "AssoDistAttachDesc" as "AttachDesc"
+        );
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_BANK_DETAIL" as "DistBankDetails";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_CUSTOMERS" as "DistCustomerDetails";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_BUSINESS_HISTORY" as "DistBusinessHistory";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_PROMOTER_MANAGEMENT" as "DistPromoManagement";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_OB_TARGETS" as "DistTargets";
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_PRICING" as "DistPricing";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_SCHEME_MASTER" as "SchemeMaster"
+        navigates (
+                "AssoSchemeStatus" as "schemeStatus",
+                "AssoDistName" as "SchemeDistributor"
+        );
+        
+        //Forecast
+        /* "TERUMODRMS_DB.db.View::TERUMO_FORECAST" as "ForecastView" keys("YEAR"); */
+        
+        /* "TERUMODRMS_DB.db.View::TERUMO_SA_FORECAST" as "SAForecastView" keys("FC_NO_1"); */
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_FORECAST_HEADER" as "ForecastHead"
+       navigates (
+                "AssoForecastItems" as "FCItems",
+                "AssoForecastStatus" as "FCStatus",
+                "AssoForecastEventsComm" as "FCEventsComm",
+                "AssoForecastUserDesc" as "UserDesc"
+        );
+        
+        association "AssoForecastUserDesc" principal "ForecastHead"("SALES_ASSOCIATES")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_FORECAST_EVENTS_COMMENTS" as "ForecastEventsComm"
+        navigates (
+                "AssoForecastEventDesc" as "ForecastEventDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_FORECAST_EVENT_MASTER" as "ForecastEventMaster";
+        
+        association "AssoForecastEventDesc" principal "ForecastEventsComm"("EVENT_CODE")
+        multiplicity "1" dependent "ForecastEventMaster"("CODE") multiplicity "1";
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_FORECAST" as "ForecastItems";
+        
+        association "AssoForecastItems" principal "ForecastHead"("FC_NO")
+        multiplicity "1" dependent "ForecastItems"("FC_NO") multiplicity "*";
+        
+        association "AssoForecastEventsComm" principal "ForecastHead"("FC_NO")
+        multiplicity "1" dependent "ForecastEventsComm"("FC_NO") multiplicity "*";
+        
+        association "AssoForecastStatus" principal "ForecastHead"("FORECAST_STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "*";
+        
+        association "AssoSalesAssoInfo" principal "DashboardHeader"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "SalesHierarchyMatrix"("DISTRIBUTOR_ID") multiplicity "*";
+        
+        
+       //Payments 
+       //Terumo CR Kaustubh : For PO Control Reports 11.03.2022
+       "TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS" as "Payments"
+       navigates (
+                "AssoPayAttachments" as "PayAttachments",
+                "AssoPayStatus" as "PayStatus",
+                "AssoPayEventsComm"   as "PayEventsComm",
+                "AssoPayMethodDesc"   as "PayMethodDesc",
+                "AssoPayDistributorDetails" as "PayDistributorDetails"
+        );
+       "TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS_ATTACHMENTS" as "PaymentAttach"
+        navigates (
+                "AssoPayAttachDesc" as "PayattachDesc"
+        );
+       "TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS_ATTACHTYPE" as "PaymentAttachType";
+       
+       "TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS_EVENTS_COMMENTS" as "PaymentEventsComm"
+        navigates (
+                "AssoPayEventDesc" as "PayEventDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_SALESHIERARCHY_MATRIX" as "SalesHierarchyMatrix"
+        navigates (
+                "AssoSalesDistDisc" as "SalesDist",
+                "AssoSalesSADesc" as "SalesSA",
+                "AssoSalesSMDesc" as "SalesSM",
+                "AssoSalesRHDesc" as "SalesRH"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_MIS_DATA" as "MISData";
+        
+        
+        
+        association "AssoCrItemDesc" principal "CrItems"("ITEM_CODE")
+        multiplicity "1" dependent "MaterielMaster"("MATERIAL_CODE") multiplicity "*";
+        
+        association "AssoRgaItemDesc" principal "RgaItems"("ITEM_CODE")
+        multiplicity "1" dependent "MaterielMaster"("MATERIAL_CODE") multiplicity "*";
+        
+        association "AssoSchemeMaster" principal "MaterielMaster"("MATERIAL_CODE")
+            multiplicity "1" dependent "SchemeMaster"("PROD_GRP") multiplicity "*";
+       
+        association "AssoPayEventDesc" principal "PaymentEventsComm"("EVENT_CODE")
+        multiplicity "1" dependent "PayEventMaster"("CODE") multiplicity "1";
+        
+        association "AssoRgaMatrixDesc" principal "RgaMatrix"("USER_ROLE")
+            multiplicity "1" dependent "RoleMaster"("USER_ROLE") multiplicity "1";
+            
+            association "AssoClaimMatrixDesc" principal "ClaimMatrix"("USER_ROLE")
+            multiplicity "1" dependent "RoleMaster"("USER_ROLE") multiplicity "1";
+            
+            association "AssoPaymentsMatrixDesc" principal "PaymentsMatrix"("USER_ROLE")
+            multiplicity "1" dependent "RoleMaster"("USER_ROLE") multiplicity "1";
+            
+            //For Consignment Order Matrix Terumo CR Kaustubh- 23.03.2022
+            association "AssoConsignMatrixDesc" principal "ConsignmentMatrix"("USER_ROLE")
+            multiplicity "1" dependent "RoleMaster"("USER_ROLE") multiplicity "1";
+        
+        association "AssoPrHeaderDistributor" principal "PRHeader"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "*";
+        
+        association "AssoDistributorDetails" principal "PRHeader"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "CustomerMaster"("CUSTOMER_CODE") multiplicity "*";
+        
+        association "AssoPrHeaderStatus" principal "PRHeader"("PR_STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "*";
+        
+        association "AssoPrHeaderOtype" principal "PRHeader"("ORDER_TYPE")
+        multiplicity "1" dependent "OrderTypeMaster"("ORDER_CODE") multiplicity "*";
+        
+        association "AssoPrHeaderBU" principal "PRHeader"("BU_CODE")
+        multiplicity "1" dependent "BuMaster"("BU_CODE") multiplicity "*";
+        
+        association "AssoPrItems" principal "PRHeader"("PR_NO")
+        multiplicity "1" dependent "PRItems"("PR_NO") multiplicity "*";
+        
+        association "AssoPrHistory" principal "PRHeader"("PR_NO")
+        multiplicity "1" dependent "PrHistory"("PR_NO") multiplicity "*";
+        
+        association "AssoPrEventsComm" principal "PRHeader"("PR_NO")
+        multiplicity "1" dependent "PrEventComms"("PR_NO") multiplicity "*";
+        
+        //Asso for Consignment Del No
+        association "AssoPrDelNo" principal "PRHeader"("PR_NO")
+        multiplicity "1" dependent "POHeader"("PR_NO") multiplicity "*";
+        
+        association "AssoPrEventsCommDesc" principal "PrEventComms"("EVENT_CODE")
+        multiplicity "1" dependent "PrEventMaster"("CODE") multiplicity "1";
+        
+        //Item Nav
+        association "AssoPrItemDesc" principal "PRItems"("MATERIAL_CODE")
+        multiplicity "1" dependent "MaterielMaster"("MATERIAL_CODE") multiplicity "*";
+        
+        association "AssoPoHeaderDistributor" principal "POHeader"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "*";
+        
+        association "AssoPoDistributorDetails" principal "POHeader"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "CustomerMaster"("CUSTOMER_CODE") multiplicity "*";
+        
+        association "AssoPoHeaderStatus" principal "POHeader"("PO_STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "*";
+        
+        //Change for Consignment delivery status Kaustubh 17.05.2022
+        association "AssoPoDelStatus" principal "POHeader"("DEL_STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "*";
+        
+        association "AssoPoHeaderOtype" principal "POHeader"("ORDER_TYPE")
+        multiplicity "1" dependent "OrderTypeMaster"("ORDER_CODE") multiplicity "*";
+        
+        association "AssoPoHeaderBU" principal "POHeader"("BU_CODE")
+        multiplicity "1" dependent "BuMaster"("BU_CODE") multiplicity "*";
+        
+        association "AssoPoItems" principal "POHeader"("SAP_ORDER_NO")
+        multiplicity "1" dependent "POItems"("SAP_ORDER_NO") multiplicity "*";
+        
+        //Adding asso for SO Cancellation Kaustubh 14.03.2022
+        association "AssoPoEventsComm" principal "POHeader"("PR_NO")
+        multiplicity "1" dependent "PrEventComms"("PR_NO") multiplicity "*";
+        
+        //Item Nav
+        association "AssoPoItemDesc" principal "POItems"("MATERIAL_CODE")
+        multiplicity "1" dependent "MaterielMaster"("MATERIAL_CODE") multiplicity "*";
+        
+        association "AssoHospDetails" principal "DistToHospital"("HOSPITAL_CODE")
+        multiplicity "1" dependent "HospitalMaster"("CODE") multiplicity "1";
+        
+        association "AssoSrDetails" principal "CustSRBUMapping"("SALES_REP_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoKitMaster" principal "KitMasterPrimary"("KIT_CODE")
+        multiplicity "1" dependent "KitMasterSecondary"("KIT_CODE") multiplicity "*";
+        
+        association "AssoStatustMaster" principal "RgaHeader"("STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "1";
+        
+        association "AssoRGAItems" principal "RgaHeader"("RGA_NO")
+        multiplicity "1" dependent "RgaItems"("RGA_NO") multiplicity "*";
+        
+        association "AssoBuDesc" principal "RgaHeader"("BU_CODE")
+        multiplicity "1" dependent "BuMaster"("BU_CODE") multiplicity "1";
+        
+        association "AssoRgaUserDesc" principal "RgaHeader"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoEventDesc" principal "RgaEventsLog"("EVENT_CODE")
+        multiplicity "1" dependent "RgaEventMaster"("CODE") multiplicity "1";
+        
+        association "AssoCrItems" principal "CrHeader"("CR_NO")
+        multiplicity "1" dependent "CrItems"("CR_NO") multiplicity "*";
+        
+        association "AssoCrUserDesc" principal "CrHeader"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoCrStatus" principal "CrHeader"("STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "1";
+        
+        association "AssoCrEventDesc" principal "CrEventsLog"("EVENT_CODE")
+        multiplicity "1" dependent "CrEventMaster"("CODE") multiplicity "1";
+        
+        association "AssoCrTypeDesc" principal "CrHeader"("CLAIM_TYPE")
+        multiplicity "1" dependent "ClaimType"("CODE") multiplicity "1";
+        
+        association "AssoCrBuDesc" principal "DistToBuSubDiv"("BU_CODE")
+        multiplicity "1" dependent "BuMaster"("BU_CODE") multiplicity "1";
+        
+        association "AssoCrBuSubDesc" principal "DistToBuSubDiv"("BU_SUB_CODE")
+        multiplicity "1" dependent "SubDivMaster"("BU_SUB_CODE") multiplicity "1";
+        
+        association "AssoCrSalesHier" principal "DistToBuSubDiv"("DISTRIBUTOR_ID", "BU_SUB_CODE")
+        multiplicity "1" dependent "SalesHierarchyMatrix"("DISTRIBUTOR_ID", "BU_SUB_CODE") multiplicity "1";
+        
+        association "AssoCrIHospitalDesc" principal "CrItems"("HOSPITAL_CODE")
+        multiplicity "1" dependent "HospitalMaster"("CODE") multiplicity "1";
+        
+        //Change Request Terumo : Kaustubh 21.02.2022 (Hospital Code shifted to header.)
+        
+        association "AssoClhIHospitalDesc" principal "CrHeader"("HOSP_CODE")
+        multiplicity "1" dependent "HospitalMaster"("CODE") multiplicity "1";
+        
+        association "AssoSADesc" principal "SalesToSubDiv"("SALES_ASSO_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoSMDesc" principal "SalesToSubDiv"("SALES_MGR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoRHDesc" principal "SalesToSubDiv"("SALES_REGIONALHEAD_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoPprUserDesc" principal "PprProcess"("SALES_ASSOCIATE_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoPprStatus" principal "PprProcess"("STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "1";
+        
+        association "AssoPprProCodeDesc" principal "PprProcess"("PROD_CODE")
+        multiplicity "1" dependent "MaterielMaster"("MATERIAL_CODE") multiplicity "*";
+        
+        association "AssoPprEventDesc" principal "PprEventsLog"("EVENT_CODE")
+        multiplicity "1" dependent "PprEventMaster"("CODE") multiplicity "1";
+        
+        association "AssoDistEventDesc" principal "DistEventsLog"("EVENT_CODE")
+        multiplicity "1" dependent "DistEventMaster"("CODE") multiplicity "1";
+        
+        association "AssoDistAttachDesc" principal "DistAttachments"("ATTACH_CODE")
+        multiplicity "1" dependent "AttachTypes"("CODE") multiplicity "1";
+        
+        association "AssoDistStatus" principal "DistOnboarding"("STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "1";
+        
+        association "AssoDistSaDesc" principal "DistOnboarding"("SALES_ASSOCIATE_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+            association "AssoRoleDesc" principal "UserMaster"("USER_ROLE")
+        multiplicity "1" dependent "RoleMaster"("USER_ROLE") multiplicity "1";
+        
+        association "AssoDistDesc" principal "HospitalMaster"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        
+        //Payments Module
+        association "AssoPayAttachments" principal "Payments"("POP_NO")
+        multiplicity "1" dependent "PaymentAttach"("POP_NO") multiplicity "*";
+        
+        association "AssoPayEventsComm" principal "Payments"("POP_NO")
+        multiplicity "1" dependent "PaymentEventsComm"("POP_NO") multiplicity "*";
+        
+        association "AssoPayStatus" principal "Payments"("POP_STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "*";
+        
+        association "AssoPayDistributorDetails" principal "Payments"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "CustomerMaster"("CUSTOMER_CODE") multiplicity "*";
+        
+        //For PO Control Reports 11.03.2022
+        association "AssoPayMethodDesc" principal "Payments"("PAYMENT_METHOD")
+        multiplicity "1" dependent "PayMethodMaster"("PMETHOD_CODE") multiplicity "*";
+        
+        association "AssoSchemeStatus" principal "SchemeMaster"("SCHEME_STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "*";
+        
+        association "AssoPayAttachDesc" principal "PaymentAttach"("ATTACH_CODE")
+        multiplicity "1" dependent "PaymentAttachType"("ATTACH_CODE") multiplicity "*";
+        
+        
+        //For Sales Hierarchy Matrix
+        association "AssoSalesDistDisc" principal "SalesHierarchyMatrix"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoSalesSADesc" principal "SalesHierarchyMatrix"("SALES_ASSO_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoSalesSMDesc" principal "SalesHierarchyMatrix"("SALES_MGR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoSalesRHDesc" principal "SalesHierarchyMatrix"("SALES_REGIONALHEAD_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+        
+        association "AssoDistName" principal "SchemeMaster"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "*";
+        
+        //For Payment F4
+       /*  association "AssoPayf4DistributorDetails" principal "Payment_F4"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "CustomerMaster"("CUSTOMER_CODE") multiplicity "*";
+        
+        association "AssoPayf4HeaderOtype" principal "Payment_F4"("ORDER_TYPE")
+        multiplicity "1" dependent "OrderTypeMaster"("ORDER_CODE") multiplicity "*"; */
+        
+        //For Payment Approval View
+        /* association "AssoPayAppDistributorDetails" principal "Payment_Approval"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "CustomerMaster"("CUSTOMER_CODE") multiplicity "*";
+        
+        association "AssoPayAppHeaderOtype" principal "Payment_Approval"("ORDER_TYPE")
+        multiplicity "1" dependent "OrderTypeMaster"("ORDER_CODE") multiplicity "*";
+        
+        association "AssoPayAppStatus" principal "Payment_Approval"("POP_STATUS")
+        multiplicity "1" dependent "StatusMaster"("CODE") multiplicity "*"; */
+        
+        //////
+        
+        
+        /////GRN VIEWS 08.11.2021
+        /* association "AssoGrnDist" principal "GRN_REPORT_COUNT"("DISTRIBUTOR_ID")
+        multiplicity "1" dependent "CustomerMaster"("CUSTOMER_CODE") multiplicity "1"; */
+        
+        //association "AssoGrnDist" principal "GRN_REPORT_COUNT"("DISTRIBUTOR_ID")
+        //multiplicity "1" dependent "UserMaster"("USER_ID") multiplicity "1";
+       
+        //association "AssoGrnMats" principal "GRN_REPORT_DRILLDOWN"("MATERIAL")
+        //multiplicity "1" dependent "MaterielMaster"("MATERIAL_CODE") multiplicity "*";
+        
+        ///
+        
+        
+        
+        //Log Tables
+        "TERUMODRMS_DB.db.Tables::TERUMO_PR_HISTORY" as "PrHistory";
+        "TERUMODRMS_DB.db.Tables::TERUMO_RGA_EVENTS_COMMENTS" as "RgaEventsLog"
+        navigates (
+                "AssoEventDesc" as "EventDesc"
+        );
+        "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_EVENTS_COMMENTS" as "CrEventsLog"
+        navigates (
+                "AssoCrEventDesc" as "EventDesc"
+        );
+        "TERUMODRMS_DB.db.Tables::TERUMO_PPR_EVENTS_COMMENTS" as "PprEventsLog"
+        navigates (
+                "AssoPprEventDesc" as "EventDesc"
+        );
+        
+        "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_EVENTS_COMMENTS" as "DistEventsLog"
+        navigates (
+                "AssoDistEventDesc" as "EventDesc"
+        );
+       
+        
+    }
+    settings{
+        support null;
+    }
+    

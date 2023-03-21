@@ -1,0 +1,136 @@
+PROCEDURE "TERUMODRMS_DB.db.Procedure::TERUMO_CLAIM_SENDBACK"(
+	IN CR_NO BIGINT,
+	IN BU_CODE NVARCHAR(50),
+	IN BU_SUB_CODE NVARCHAR(100),
+	IN USER_ID NVARCHAR(100),
+	IN CURR_APPROVER_ROLE NVARCHAR(50),
+	IN ST_EVENTS "TERUMODRMS_DB.db.Structure::ST_TERUMO_CLAIM_EVENTS_COMMENTS",
+	OUT OUT_SUCCESS VARCHAR(100)
+	)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+   
+   -- Local Variables:
+	DECLARE CURR_TIMESTAMP TIMESTAMP;
+	DECLARE DIST_ID NVARCHAR(100);
+	DECLARE STATUS INTEGER;
+	DECLARE INFO_CHECK BOOLEAN := FALSE;
+	--Send back (SB) details
+	DECLARE SB_APPROVER_ROLE NVARCHAR(50);
+	DECLARE SB_APPROVER_LEVEL INTEGER;
+	DECLARE SB_APPROVER NVARCHAR(100);
+	-- Event Values
+	DECLARE EVENT_COUNT INTEGER;
+	DECLARE EVENT_NO INTEGER;
+	DECLARE EVENT_CODE NVARCHAR(30);
+	DECLARE REMARK NVARCHAR(100); 
+	
+	-- Get current timestamp
+	SELECT CURRENT_TIMESTAMP INTO CURR_TIMESTAMP FROM "TERUMODRMS_DB.db::DUMMY";
+	
+	-- Get Count for new EVENT_NO
+	SELECT COUNT(*) into EVENT_COUNT FROM "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_EVENTS_COMMENTS" 
+	WHERE "CR_NO" = :CR_NO;
+	
+	EVENT_NO := EVENT_COUNT + 1;
+	REMARK := 'Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+	
+	
+	-- Send back only if Sales Associate OR Third Party OR Finance Director OR Busines Director
+	IF :CURR_APPROVER_ROLE = 'SA'
+	THEN
+		STATUS := 15; --Sent Back by SA
+		SB_APPROVER_LEVEL := 1; -- SA
+		EVENT_CODE := 5; --RGA Request Sent back
+		
+		-- Get Distributor id from Claim Header
+		SELECT "DISTRIBUTOR_ID" INTO DIST_ID FROM "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_HEADER"
+		WHERE "CR_NO" = :CR_NO;
+		
+		--Get Sales Associate as Sendback Approver
+		SELECT "SALES_ASSO_ID" INTO SB_APPROVER FROM "TERUMODRMS_DB.db.Tables::TERUMO_SALESHIERARCHY_MATRIX"
+		WHERE "BU_SUB_CODE" = :BU_SUB_CODE AND "BU_CODE" = :BU_CODE AND "DISTRIBUTOR_ID" = :DIST_ID;
+		
+		OUT_SUCCESS := 'Claim Request Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		INFO_CHECK := TRUE;
+	
+	ELSEIF :CURR_APPROVER_ROLE = 'TP'
+	THEN
+		STATUS := 20; -- Sent Back by Third Party
+		SB_APPROVER_LEVEL := 1; -- SA - Sales Asscociate
+		EVENT_CODE := 5; -- RGA Request Sent back
+		
+		-- Get Distributor id from Claim Header
+		SELECT "DISTRIBUTOR_ID" INTO DIST_ID FROM "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_HEADER"
+		WHERE "CR_NO" = :CR_NO;
+		
+		--Get Sales Associate as Sendback Approver
+		SELECT "SALES_ASSO_ID" INTO SB_APPROVER FROM "TERUMODRMS_DB.db.Tables::TERUMO_SALESHIERARCHY_MATRIX"
+		WHERE "BU_SUB_CODE" = :BU_SUB_CODE AND "BU_CODE" = :BU_CODE AND "DISTRIBUTOR_ID" = :DIST_ID;
+		
+		OUT_SUCCESS := 'Claim Request Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		INFO_CHECK := TRUE;
+	
+	ELSEIF :CURR_APPROVER_ROLE = 'FD'
+	THEN
+		STATUS := 21; -- Sent Back by FD
+		SB_APPROVER_LEVEL := 4; -- TP - Third Party
+		EVENT_CODE := 5; -- RGA Request Sent back
+		
+		-- Get Third Party id as Sendback Approver
+		SELECT "USER_ID" INTO SB_APPROVER FROM "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER"
+		WHERE "USER_ROLE" = 'TP';
+		
+		OUT_SUCCESS := 'Claim Request Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		INFO_CHECK := TRUE;
+	
+	ELSEIF :CURR_APPROVER_ROLE = 'BUH'
+	THEN
+		STATUS := 22;  -- Sent Back by BD
+		SB_APPROVER_LEVEL := 4; -- TP - Third Party
+		EVENT_CODE := 5; -- RGA Request Sent back
+		
+		-- Get Third Party id as Sendback Approver
+		SELECT "USER_ID" INTO SB_APPROVER FROM "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER"
+		WHERE "USER_ROLE" = 'TP';
+		
+		OUT_SUCCESS := 'Claim Request Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		INFO_CHECK := TRUE;
+		
+	ELSE
+		OUT_SUCCESS := 'Invalid Approver Role for SendBack';
+    END IF;
+		
+   
+   
+    -- Update & Insert only when INFO_CHECK is TRUE
+    IF :INFO_CHECK = TRUE
+	THEN
+		-- Get Sendback Approver Role from Sendback Approver level
+		SELECT "USER_ROLE" INTO SB_APPROVER_ROLE FROM "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_MATRIX"
+		WHERE "APPROVER_LEVEL" = :SB_APPROVER_LEVEL;
+	
+		-- 1) Update into Header:
+		UPDATE "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_HEADER"
+		SET "APPROVER_LEVEL" = :SB_APPROVER_LEVEL, "NEXT_APPROVER"= :SB_APPROVER, "APPROVER_ROLE" = :SB_APPROVER_ROLE, 
+			"STATUS" = :STATUS, "LAST_UPDATED" = :CURR_TIMESTAMP
+		WHERE "CR_NO" = :CR_NO;
+	
+		-- 2) Insert into Events Log:
+		INSERT INTO "TERUMODRMS_DB.db.Tables::TERUMO_CLAIM_EVENTS_COMMENTS" 
+		(
+			"CR_NO", "EVENT_NO", "EVENT_CODE", "USER_ID", "USER_NAME", "USER_ROLE", "REMARK", "COMMENT", "CREATION_DATE"
+		)
+		SELECT 	:CR_NO, :EVENT_NO, :EVENT_CODE, "USER_ID", "USER_NAME", "USER_ROLE", :REMARK, "COMMENT", :CURR_TIMESTAMP
+		FROM :ST_EVENTS;
+		COMMIT;
+		
+	END IF;
+	
+END

@@ -1,0 +1,15 @@
+VIEW "TERUMODRMS_DB.db.View::TERUMO_SO_TOTALS" AS
+SELECT  
+          A."SAP_ORDER_NO",
+          A."PO_PAYMENT_STATUS",
+          B."SUB_DIV" as SUB_DIV,
+          --Add PO_STATUS for ORder Cancellation - Terumo CR KAustubh 12.02.2022
+          A."PO_STATUS",
+          Round((SUM(B."TOTAL_AMOUNT" + B."TAX_AMOUNT") + (SUM(B."TOTAL_AMOUNT" + B."TAX_AMOUNT") * B."TCS")/100) , 2) as PI_TOTAL_AMOUNT,
+          Round(SUM(B."TOTAL_AMOUNT") , 2) as PI_WITHOUT_TAX_AMOUNT
+            
+         
+FROM "TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER" as A 
+LEFT OUTER JOIN "TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS" as B
+ON A."SAP_ORDER_NO" =  B."SAP_ORDER_NO"
+GROUP BY A."SAP_ORDER_NO",B."TCS", A."PO_PAYMENT_STATUS", A."PO_STATUS",B."SUB_DIV"

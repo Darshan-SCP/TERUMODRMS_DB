@@ -1,0 +1,10 @@
+{
+	"description": "Test jon for Insert Operation",
+	"action": "Xsjs:Test.xsjs::fnHandlePost",
+	"schedules": [
+		{
+			"description": "Test insert Operation",
+					"xscron": "* * * * * * 59"
+		}
+	]
+}

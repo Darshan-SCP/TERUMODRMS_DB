@@ -1,0 +1,27 @@
+ID: TERUMODRMS_DB
+_schema-version: '2.1'
+version: 0.0.1
+modules:
+  - name: db
+    type: hdb
+    path: db
+    requires:
+      - name: hdi_db
+  - name: Service
+    type: nodejs
+    path: Service
+    requires:
+      - name: hdi_db
+    provides:
+      - name: Service_api
+        properties:
+          url: '${default-url}'
+resources:
+  - name: hdi_db
+    parameters:
+      config:
+        schema: DBTEST_HDI_DB_1
+    properties:
+      hdi-container-name: '${service-name}'
+    type: com.sap.xs.hdi-container
+  

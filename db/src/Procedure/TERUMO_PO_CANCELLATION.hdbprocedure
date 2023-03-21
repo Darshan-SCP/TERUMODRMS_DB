@@ -1,0 +1,81 @@
+PROCEDURE "TERUMODRMS_DB.db.Procedure::TERUMO_PO_CANCELLATION" ( 
+    IN LV_PO_NO BIGINT,
+    IN LV_ACTION NVARCHAR(20),
+    IN ST_PO_EVENTSCOMMS "TERUMODRMS_DB.db.Structure::ST_TERUMO_PR_EVENTS_COMMENTS",
+	OUT OUT_SUCCESS VARCHAR(100)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   
+AS   
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+-- Local variables
+
+DECLARE LV_DATE DATE;
+DECLARE LV_EVENTNO INT;
+
+DECLARE EXIT HANDLER FOR SQLEXCEPTION SELECT ::SQL_ERROR_CODE, ::SQL_ERROR_MESSAGE FROM "TERUMODRMS_DB.db::DUMMY";
+/*DECLARE DEFAULT_FTYPE VARCHAR(100);*/
+SELECT CURRENT_TIMESTAMP INTO LV_DATE FROM "TERUMODRMS_DB.db::DUMMY";
+
+IF :LV_ACTION = 'POCancelCreate'
+THEN
+--Header Table Update for PO Cancellation Request Creation
+
+UPDATE "TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER" 
+   SET "PO_STATUS" = '39'
+   WHERE "SAP_ORDER_NO" = :LV_PO_NO ;
+
+-- For Events and Comments Table
+INSERT INTO "TERUMODRMS_DB.db.Tables::TERUMO_PR_EVENTS_COMMENTS" 
+("PR_NO","EVENT_NO","EVENT_CODE","USER_ID","USER_ROLE","USER_NAME","COMMENTS","CRT_DATE"
+)
+SELECT 
+"PR_NO","EVENT_NO","EVENT_CODE","USER_ID","USER_ROLE","USER_NAME","COMMENTS","CRT_DATE"
+FROM :ST_PO_EVENTSCOMMS;
+COMMIT;
+OUT_SUCCESS := 'Purchase Order Cancellation request for ' || :LV_PO_NO || ' Created';
+
+ELSEIF :LV_ACTION = 'POCancelApprove'
+THEN
+--Header Table Update for PO Cancellation Approve
+
+UPDATE "TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER" 
+   SET "PO_STATUS" = '40'
+   WHERE "SAP_ORDER_NO" = :LV_PO_NO ;
+
+-- For Events and Comments Table
+INSERT INTO "TERUMODRMS_DB.db.Tables::TERUMO_PR_EVENTS_COMMENTS" 
+("PR_NO","EVENT_NO","EVENT_CODE","USER_ID","USER_ROLE","USER_NAME","COMMENTS","CRT_DATE"
+)
+SELECT 
+"PR_NO","EVENT_NO","EVENT_CODE","USER_ID","USER_ROLE","USER_NAME","COMMENTS","CRT_DATE"
+FROM :ST_PO_EVENTSCOMMS;
+COMMIT;
+OUT_SUCCESS := 'Purchase Order Cancellation request for ' || :LV_PO_NO || ' Approved';
+
+ELSEIF :LV_ACTION = 'POCancelReject'
+THEN
+--Header Table Update for PO Cancellation Reject
+
+UPDATE "TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER" 
+   SET "PO_STATUS" = '41'
+   WHERE "SAP_ORDER_NO" = :LV_PO_NO ;
+
+-- For Events and Comments Table
+INSERT INTO "TERUMODRMS_DB.db.Tables::TERUMO_PR_EVENTS_COMMENTS" 
+("PR_NO","EVENT_NO","EVENT_CODE","USER_ID","USER_ROLE","USER_NAME","COMMENTS","CRT_DATE"
+)
+SELECT 
+"PR_NO","EVENT_NO","EVENT_CODE","USER_ID","USER_ROLE","USER_NAME","COMMENTS","CRT_DATE"
+FROM :ST_PO_EVENTSCOMMS;
+COMMIT;
+OUT_SUCCESS := 'Purchase Order Cancellation request for ' || :LV_PO_NO || ' rejected';
+
+ELSE
+OUT_SUCCESS := 'Invalid Action Selected';
+END IF; 
+END

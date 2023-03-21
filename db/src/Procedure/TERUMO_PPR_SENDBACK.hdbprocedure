@@ -1,0 +1,74 @@
+PROCEDURE "TERUMODRMS_DB.db.Procedure::TERUMO_PPR_SENDBACK"(
+	IN PPR_NO BIGINT,
+	IN USER_ID NVARCHAR(100),
+	IN CURR_APRROVER_ROLE NVARCHAR(50),
+	IN ST_EVENTS "TERUMODRMS_DB.db.Structure::ST_TERUMO_PPR_EVENTS_COMMENTS",
+	OUT OUT_SUCCESS VARCHAR(100)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+	DECLARE CURR_TIMESTAMP TIMESTAMP;
+	
+	DECLARE STATUS INTEGER;
+	--Send back (SB) details
+	-- DECLARE SB_APRROVER_ROLE NVARCHAR(50);
+	-- DECLARE SB_APPROVER NVARCHAR(100);
+	-- Event Values
+	DECLARE EVENT_COUNT NVARCHAR(50);
+	DECLARE EVENT_NO INTEGER;
+	DECLARE EVENT_CODE NVARCHAR(30);
+	DECLARE REMARK NVARCHAR(100); 
+   
+   IF :CURR_APRROVER_ROLE = 'QA' -- Approval by Sales Associate
+	THEN
+	
+		-- Local Variable values assigning
+		
+		SELECT CURRENT_TIMESTAMP INTO CURR_TIMESTAMP FROM "TERUMODRMS_DB.db::DUMMY";
+		
+		-- Get Count for new EVENT_NO
+		SELECT COUNT(*) into EVENT_COUNT FROM "TERUMODRMS_DB.db.Tables::TERUMO_PPR_EVENTS_COMMENTS" 
+		WHERE "PPR_NO" = :PPR_NO;
+		
+		EVENT_NO := EVENT_COUNT + 1;
+		EVENT_CODE := 3; --3	'PPR Request Sent Back'
+		
+		STATUS := 24; --24	'Sent Back by QA'
+		-- SB_APRROVER_ROLE := 'QA'; -- Quality assurance
+		-- SB_APPROVER := ''; -- Quality assurance
+		
+		REMARK := 'Sent back by ' || :CURR_APRROVER_ROLE || ' - ' || :USER_ID;
+		
+		
+		-- 1) Update into Header Table:
+		
+		UPDATE "TERUMODRMS_DB.db.Tables::TERUMO_PPR_PROCESS"
+		SET "STATUS" = :STATUS
+		WHERE "PPR_NO" = :PPR_NO;
+		
+		-- SET "NEXT_APPROVER"= :SB_APPROVER, "APRROVER_ROLE" = :SB_APRROVER_ROLE, 
+		-- 	"STATUS" = :STATUS
+		COMMIT;
+		
+		-- 2) Insert into Events Table:
+		INSERT INTO "TERUMODRMS_DB.db.Tables::TERUMO_PPR_EVENTS_COMMENTS" 
+		(
+			"PPR_NO", "EVENT_NO", "EVENT_CODE", "USER_ID", "USER_NAME", "USER_ROLE", "REMARK", "COMMENT", "CREATION_DATE"
+		)
+		SELECT 	:PPR_NO, :EVENT_NO, :EVENT_CODE, "USER_ID", "USER_NAME", "USER_ROLE", :REMARK, "COMMENT", :CURR_TIMESTAMP
+		FROM :ST_EVENTS;
+		COMMIT;
+		
+		OUT_SUCCESS := 'PPR Request Sent back by ' || :CURR_APRROVER_ROLE || ' - ' || :USER_ID;
+	ELSE
+		OUT_SUCCESS := 'Invalid User Role: '||:CURR_APRROVER_ROLE||'. "QA" expected';
+    END IF;
+    
+    
+END

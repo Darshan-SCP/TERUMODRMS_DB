@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TERUMODRMS_DB.db.View::TERUMO_DASHBOARD_HEADER" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="TERUMO_DASHBOARD_HEADER"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="RGA_CREATED$$$$TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="RGA_PENDING$$$$TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="RGA_REJECTED$$$$TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="RGA_ALL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="STATUS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="TOTAL" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="RGA_ALL">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL" source="STATUS"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="RGA_CREATED" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="STATUS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="RGA_CREATED$$$$TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER$$"/>
+    <filter>&quot;STATUS&quot;=14 OR &quot;STATUS&quot;=17</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="CREATED" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="RGA_CREATED">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED" source="STATUS"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="RGA_PENDING" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="STATUS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="RGA_PENDING$$$$TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER$$"/>
+    <filter>&quot;STATUS&quot;=6 OR &quot;STATUS&quot;=15</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="PENDNG" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="RGA_PENDING">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PENDNG" source="STATUS"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="RGA_REJECTED" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="STATUS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="RGA_REJECTED$$$$TERUMODRMS_DB.db.Tables::TERUMO_RGA_HEADER$$"/>
+    <filter>&quot;STATUS&quot;=16</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_4">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="REJECTED" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="RGA_REJECTED">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REJECTED" source="STATUS"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_1" cardinality="C1_1" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Aggregation_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="PENDNG" aggregationType="sum"/>
+      <viewAttribute id="REJECTED" aggregationType="sum"/>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PENDNG" source="PENDNG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+    </input>
+    <input node="Aggregation_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REJECTED" source="REJECTED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+    </input>
+    <joinAttribute name="DISTRIBUTOR_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_2" cardinality="C1_1" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Aggregation_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="CREATED" aggregationType="sum"/>
+      <viewAttribute id="PENDNG" aggregationType="sum"/>
+      <viewAttribute id="REJECTED" aggregationType="sum"/>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED" source="CREATED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+    </input>
+    <input node="Join_1_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PENDNG" source="PENDNG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REJECTED" source="REJECTED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+    </input>
+    <joinAttribute name="DISTRIBUTOR_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_3" cardinality="C1_1" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Aggregation_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="TOTAL" aggregationType="sum"/>
+      <viewAttribute id="CREATED" aggregationType="sum"/>
+      <viewAttribute id="PENDNG" aggregationType="sum"/>
+      <viewAttribute id="REJECTED" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL" source="TOTAL"/>
+    </input>
+    <input node="Join_1_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATED" source="CREATED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PENDNG" source="PENDNG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REJECTED" source="REJECTED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+    </input>
+    <joinAttribute name="DISTRIBUTOR_ID"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1_3">
+  <attributes>
+    <attribute id="DISTRIBUTOR_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DISTRIBUTOR_ID"/>
+      <keyMapping columnObjectName="Join_1_3" columnName="DISTRIBUTOR_ID"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="TOTAL" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TOTAL"/>
+      <measureMapping columnObjectName="Join_1_3" columnName="TOTAL"/>
+    </measure>
+    <measure id="CREATED" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CREATED"/>
+      <measureMapping columnObjectName="Join_1_3" columnName="CREATED"/>
+    </measure>
+    <measure id="PENDNG" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PENDNG"/>
+      <measureMapping columnObjectName="Join_1_3" columnName="PENDNG"/>
+    </measure>
+    <measure id="REJECTED" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="STATUS"/>
+      <measureMapping columnObjectName="Join_1_3" columnName="REJECTED"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="RGA_ALL" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-149" y="409"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-149" y="330"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="RGA_CREATED" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="20" y="409"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="21" y="330"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="RGA_PENDING" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="189" y="409"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="189" y="330"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="RGA_REJECTED" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="362" y="409"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="362" y="330"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="172"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="177.47509765625"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="177.47509765625"/>
+    </shape>
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="177.47509765625"/>
+    </shape>
+    <shape modelObjectName="Aggregation_4" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="148.01171875"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,119 @@
+PROCEDURE "TERUMODRMS_DB.db.Procedure::TERUMO_ONBOARDING_SENDBACK"( 
+	IN OB_NO BIGINT,
+	IN BU_CODE NVARCHAR(50),
+	IN USER_ID NVARCHAR(100),
+	IN APPROVER_LEVEL INTEGER,
+	IN CURR_APPROVER_ROLE NVARCHAR(50),
+	IN ST_EVENTS "TERUMODRMS_DB.db.Structure::ST_TERUMO_DISTRIBUTOR_EVENTS_COMMENTS",
+	OUT OUT_SUCCESS NVARCHAR(100)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+   -- Local Variables:
+	DECLARE CURR_TIMESTAMP TIMESTAMP;
+	DECLARE STATUS INTEGER;
+	DECLARE INFO_CHECK BOOLEAN := FALSE;
+	-- Next Approver details
+	DECLARE SB_APPROVER_ROLE NVARCHAR(50);
+	DECLARE SB_APPROVER_LEVEL INTEGER;
+	DECLARE SB_APPROVER NVARCHAR(100);
+	-- Event Values
+	DECLARE EVENT_COUNT INTEGER;
+	DECLARE EVENT_NO INTEGER;
+	DECLARE EVENT_CODE NVARCHAR(30);
+	DECLARE REMARK NVARCHAR(100); 
+	
+	-- Get current timestamp
+	SELECT CURRENT_TIMESTAMP INTO CURR_TIMESTAMP FROM "TERUMODRMS_DB.db::DUMMY";
+	
+	-- Get Count for new EVENT_NO
+	SELECT COUNT(*) into EVENT_COUNT FROM "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_EVENTS_COMMENTS" 
+	WHERE "OB_NO" = :OB_NO;
+	
+	EVENT_NO := EVENT_COUNT + 1;
+	EVENT_CODE := 5; --5	OB Request Sent Back
+	
+	
+	SB_APPROVER_LEVEL := 1; -- SA
+	
+	IF :CURR_APPROVER_ROLE = 'MKT' -- Send back by Sales Associate
+	THEN
+		STATUS := 31; --31	Sent Back by MKT
+		
+		REMARK := 'Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		OUT_SUCCESS := 'OBR Request Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		INFO_CHECK := TRUE;
+	
+	
+	ELSEIF :CURR_APPROVER_ROLE = 'CM' -- Send back by Third Party (RUBIX)
+	THEN
+		STATUS := 32; --32	Sent Back CM
+		
+		REMARK := 'Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		OUT_SUCCESS := 'OBR Request Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID  || ' at Level : ' || :APPROVER_LEVEL;
+		INFO_CHECK := TRUE;
+		
+	ELSEIF :CURR_APPROVER_ROLE = 'FD' -- Approval by Finance Head
+	THEN
+		STATUS := 33; --33	Sent Back by FH
+		
+		REMARK := 'Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		OUT_SUCCESS := 'OBR Request Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		INFO_CHECK := TRUE;
+		
+	ELSEIF :CURR_APPROVER_ROLE = 'MD' -- Approval by Managing Director
+	THEN
+		STATUS := 34; --34	Sent Back by MD
+		
+		REMARK := 'Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		OUT_SUCCESS := 'OBR Request Sent back by ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		INFO_CHECK := TRUE;
+		
+	ELSE
+		OUT_SUCCESS := 'Incorrect role for send back: ' || :CURR_APPROVER_ROLE || ' - ' || :USER_ID;
+		
+	END IF;
+	
+	-- Update & Insert only when INFO_CHECK is TRUE
+    IF :INFO_CHECK = TRUE
+	THEN
+		
+		-- Get Sendback Approver Role from Sendback Approver level
+		SELECT "USER_ROLE" INTO SB_APPROVER_ROLE FROM "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_MATRIX"
+		WHERE "APPROVER_LEVEL" = :SB_APPROVER_LEVEL; --SA
+		
+		-- Get Sales Associate id as Next Approver
+		SELECT "SALES_ASSOCIATE_ID" INTO SB_APPROVER FROM "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_ONBOARDING"
+		WHERE "OB_NO" = :OB_NO;
+		-- SELECT "USER_ID" INTO SB_APPROVER FROM "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER"
+		-- WHERE "BU_CODE" = :BU_CODE AND "USER_ROLE" = SB_APPROVER_ROLE;
+		
+		-- 1) Update into Header:
+		UPDATE "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_ONBOARDING"
+		SET "APPROVER_LEVEL" = :SB_APPROVER_LEVEL, 
+			"NEXT_APPROVER"= :SB_APPROVER, 
+			"APPROVER_ROLE" = :SB_APPROVER_ROLE, 
+			"STATUS" = :STATUS, 
+			"LAST_UPDATED" = :CURR_TIMESTAMP
+		WHERE "OB_NO" = :OB_NO;
+		
+		
+		-- 2) Insert into Events Log:
+		INSERT INTO "TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_EVENTS_COMMENTS" 
+		(
+			"OB_NO", "EVENT_NO", "EVENT_CODE", "USER_ID", "USER_NAME", "USER_ROLE", "REMARK", "COMMENT", "CREATION_DATE"
+		)
+		SELECT 	:OB_NO, :EVENT_NO, :EVENT_CODE, "USER_ID", "USER_NAME", "USER_ROLE", :REMARK, "COMMENT", :CURR_TIMESTAMP
+		FROM :ST_EVENTS;
+		COMMIT;
+		
+	END IF;
+   
+   
+END

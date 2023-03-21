@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TERUMODRMS_DB.db.View::TERUMO_FORECAST" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="TERUMO_FORECAST.hdbcalculationview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_MATERIEL_MASTER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_MATERIEL_MASTER</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+    
+      <viewAttribute id="SUBDIVISION"/>
+    
+      <viewAttribute id="MATERIAL"/>
+      <viewAttribute id="MATGRP"/>
+      <viewAttribute id="QTY"/>
+      <viewAttribute id="INVOICE_DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+    
+      <calculatedViewAttribute id="May" datatype="DOUBLE" expressionLanguage="SQL">
+    
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 5 AND 5
+	 THEN &quot;QTY&quot;
+END
+</formula>
+    
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="Quant" datatype="DOUBLE" expressionLanguage="SQL">
+    
+        <formula>&quot;QTY&quot;</formula>
+    
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="January" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 1 AND 1
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="February" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 2 AND 2
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="March" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 3 AND 3
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="April" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 4 AND 4
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="June" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 6 AND 6
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="July" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 7 AND 7
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="August" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 8 AND 8
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="September" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 9 AND 9
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="October" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 10 AND 10
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="November" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 11 AND 11
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="December" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;INVOICE_DATE&quot;) BETWEEN 12 AND 12
+	 THEN &quot;QTY&quot;
+END
+</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>YEAR(&quot;INVOICE_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_INVOICE_MASTER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+    
+      <viewAttribute id="SUB_DIV"/>
+    
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="MATERIAL_DESC"/>
+      <viewAttribute id="PROD_GRP"/>
+    
+      <viewAttribute id="MRP_CODE"/>
+      <viewAttribute id="MRP_NAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_MATERIEL_MASTER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="SUBDIVISION"/>
+      <viewAttribute id="MATERIAL"/>
+      <viewAttribute id="MATGRP"/>
+      <viewAttribute id="Quant" aggregationType="sum"/>
+      <viewAttribute id="January" aggregationType="sum"/>
+      <viewAttribute id="May" aggregationType="sum"/>
+      <viewAttribute id="February" aggregationType="sum"/>
+      <viewAttribute id="March" aggregationType="sum"/>
+      <viewAttribute id="April" aggregationType="sum"/>
+      <viewAttribute id="June" aggregationType="sum"/>
+      <viewAttribute id="July" aggregationType="sum"/>
+      <viewAttribute id="August" aggregationType="sum"/>
+      <viewAttribute id="September" aggregationType="sum"/>
+      <viewAttribute id="October" aggregationType="sum"/>
+      <viewAttribute id="November" aggregationType="sum"/>
+      <viewAttribute id="December" aggregationType="sum"/>
+    
+      <viewAttribute id="YEAR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="MATERIAL_DESC"/>
+      <viewAttribute id="PROD_GRP"/>
+      <viewAttribute id="MRP_CODE"/>
+      <viewAttribute id="MRP_NAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="rightOuter" ignoreMultipleOutputsForFilter="false">
+    <viewAttributes>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="MATERIAL_DESC"/>
+      <viewAttribute id="PROD_GRP"/>
+      <viewAttribute id="Quant" aggregationType="sum"/>
+      <viewAttribute id="January" aggregationType="sum"/>
+      <viewAttribute id="May" aggregationType="sum"/>
+      <viewAttribute id="July" aggregationType="sum"/>
+      <viewAttribute id="August" aggregationType="sum"/>
+      <viewAttribute id="February" aggregationType="sum"/>
+      <viewAttribute id="March" aggregationType="sum"/>
+      <viewAttribute id="April" aggregationType="sum"/>
+      <viewAttribute id="June" aggregationType="sum"/>
+      <viewAttribute id="September" aggregationType="sum"/>
+      <viewAttribute id="October" aggregationType="sum"/>
+      <viewAttribute id="November" aggregationType="sum"/>
+      <viewAttribute id="December" aggregationType="sum"/>
+      <viewAttribute id="MRP_CODE"/>
+      <viewAttribute id="MRP_NAME"/>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute hidden="true" id="JOIN$MATERIAL$MATERIAL_CODE"/>
+      <viewAttribute hidden="true" id="JOIN$MATGRP$PROD_GRP"/>
+      <viewAttribute hidden="true" id="JOIN$SUBDIVISION$SUB_DIV"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Quant" source="Quant"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="January" source="January"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="May" source="May"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="July" source="July"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="August" source="August"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="February" source="February"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="March" source="March"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="April" source="April"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="June" source="June"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="September" source="September"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="October" source="October"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="November" source="November"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="December" source="December"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MATERIAL$MATERIAL_CODE" source="MATERIAL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MATGRP$PROD_GRP" source="MATGRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SUBDIVISION$SUB_DIV" source="SUBDIVISION"/>
+    </input>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_DESC" source="MATERIAL_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_GRP" source="PROD_GRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_CODE" source="MRP_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_NAME" source="MRP_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MATERIAL$MATERIAL_CODE" source="MATERIAL_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MATGRP$PROD_GRP" source="PROD_GRP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SUBDIVISION$SUB_DIV" source="SUB_DIV"/>
+    </input>
+    <joinAttribute name="JOIN$MATERIAL$MATERIAL_CODE"/>
+    <joinAttribute name="JOIN$MATGRP$PROD_GRP"/>
+    <joinAttribute name="JOIN$SUBDIVISION$SUB_DIV"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="SUB_DIV" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUB_DIV"/>
+      <keyMapping columnObjectName="Join_1" columnName="SUB_DIV"/>
+    </attribute>
+    <attribute id="MATERIAL_CODE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATERIAL_CODE"/>
+      <keyMapping columnObjectName="Join_1" columnName="MATERIAL_CODE"/>
+    </attribute>
+    <attribute id="MATERIAL_DESC" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATERIAL_DESC"/>
+      <keyMapping columnObjectName="Join_1" columnName="MATERIAL_DESC"/>
+    </attribute>
+    <attribute id="PROD_GRP" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_GRP"/>
+      <keyMapping columnObjectName="Join_1" columnName="PROD_GRP"/>
+    </attribute>
+  
+    <attribute id="MRP_CODE" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MRP_CODE"/>
+  
+      <keyMapping columnObjectName="Join_1" columnName="MRP_CODE"/>
+  
+    </attribute>
+    <attribute id="MRP_NAME" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MRP_NAME"/>
+      <keyMapping columnObjectName="Join_1" columnName="MRP_NAME"/>
+    </attribute>
+  
+    <attribute id="YEAR" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR"/>
+      <keyMapping columnObjectName="Join_1" columnName="YEAR"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="Quant" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Quant"/>
+      <measureMapping columnObjectName="Join_1" columnName="Quant"/>
+    </measure>
+    <measure id="January" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="January"/>
+      <measureMapping columnObjectName="Join_1" columnName="January"/>
+    </measure>
+    <measure id="May" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="May"/>
+      <measureMapping columnObjectName="Join_1" columnName="May"/>
+    </measure>
+    <measure id="July" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="July"/>
+      <measureMapping columnObjectName="Join_1" columnName="July"/>
+    </measure>
+    <measure id="August" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="August"/>
+      <measureMapping columnObjectName="Join_1" columnName="August"/>
+    </measure>
+    <measure id="February" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="February"/>
+      <measureMapping columnObjectName="Join_1" columnName="February"/>
+    </measure>
+    <measure id="March" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="March"/>
+      <measureMapping columnObjectName="Join_1" columnName="March"/>
+    </measure>
+    <measure id="April" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="April"/>
+      <measureMapping columnObjectName="Join_1" columnName="April"/>
+    </measure>
+    <measure id="June" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="June"/>
+      <measureMapping columnObjectName="Join_1" columnName="June"/>
+    </measure>
+    <measure id="September" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="September"/>
+      <measureMapping columnObjectName="Join_1" columnName="September"/>
+    </measure>
+    <measure id="October" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="October"/>
+      <measureMapping columnObjectName="Join_1" columnName="October"/>
+    </measure>
+    <measure id="November" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="November"/>
+      <measureMapping columnObjectName="Join_1" columnName="November"/>
+    </measure>
+    <measure id="December" order="17" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="December"/>
+      <measureMapping columnObjectName="Join_1" columnName="December"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="93" y="105"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-32" y="511"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="266" y="511"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-32" y="359"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="232" y="357"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="94" y="213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="2247" y="30"/>
+      <rectangleSize width="179"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="2547" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

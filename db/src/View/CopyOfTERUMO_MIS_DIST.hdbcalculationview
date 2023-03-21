@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TERUMODRMS_DB.db.View::CopyOfTERUMO_MIS_DIST" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="TERUMO_MIS_DIST.hdbcalculationview"/>
+<localVariables>
+
+  <variable id="ASSOCIATE_ID" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="100" mandatory="false" defaultValue="*">
+      <valueDomain type="empty"/>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+
+  <variable id="FIN_YEAR" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="13" mandatory="true">
+      <valueDomain type="empty"/>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="Month" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="13" mandatory="true">
+      <valueDomain type="empty"/>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_CUSTOMER_MASTER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_CUSTOMER_MASTER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TARGET">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TARGET</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Customer_Master">
+    <viewAttributes>
+      <viewAttribute id="CUSTOMER_CODE"/>
+      <viewAttribute id="CUSTOMER_NAME"/>
+      <viewAttribute id="REGION_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="REGION" datatype="NVARCHAR" length="100" expressionLanguage="SQL">
+        <formula>CASE &quot;REGION_CODE&quot;
+     WHEN '1' then 'NORTH'
+     WHEN '2' then 'NORTH' 
+	 WHEN '3' then 'NORTH' 
+	 WHEN '4' then 'NORTH' 
+	 WHEN '5' then 'NORTH' 
+	 WHEN '6' then 'NORTH' 
+	 WHEN '7' then 'NORTH' 
+	 WHEN '8' then 'NORTH' 
+	 WHEN '9' then 'NORTH' 
+	 WHEN '10' then 'NORTH' 
+	 WHEN '11' then 'EAST' 
+	 WHEN '12' then 'EAST'
+	 WHEN '13' then 'EAST'
+	 WHEN '14' then 'EAST'
+	 WHEN '15' then 'EAST'
+	 WHEN '16' then 'EAST'
+	 WHEN '17' then 'EAST'
+	 WHEN '18' then 'EAST'
+	 WHEN '19' then 'EAST'
+	 WHEN '20' then 'EAST'
+	 WHEN '21' then 'EAST'
+	 WHEN '22' then 'WEST'
+	 WHEN '23' then 'WEST'
+	 WHEN '24' then 'WEST'
+	 WHEN '26' then 'WEST'
+	 WHEN '27' then 'WEST'
+	 WHEN '28' then 'SOUTH'
+	 WHEN '29' then 'SOUTH'
+	 WHEN '30' then 'WEST'
+	 WHEN '31' then 'SOUTH'
+	 WHEN '32' then 'SOUTH'
+	 WHEN '33' then 'SOUTH'
+	 WHEN '34' then 'SOUTH'
+	 WHEN '35' then 'SOUTH'
+	 WHEN '36' then 'SOUTH'
+	 WHEN '37' then 'SOUTH'
+	 WHEN '38' then 'SOUTH'
+	 ELSE 'NA' 
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_CUSTOMER_MASTER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REGION_CODE" source="REGION"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="DIST_TARGET" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="REGION"/>
+      <viewAttribute id="SALES_ASSOCIATES"/>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="APRIL"/>
+      <viewAttribute id="MAY"/>
+      <viewAttribute id="JUNE"/>
+      <viewAttribute id="JULY"/>
+      <viewAttribute id="AUGUST"/>
+      <viewAttribute id="SEPTEMBER"/>
+      <viewAttribute id="OCTOBER"/>
+      <viewAttribute id="NOVEMBER"/>
+      <viewAttribute id="DECEMBER"/>
+      <viewAttribute id="JANUARY"/>
+      <viewAttribute id="FEBRUARY"/>
+      <viewAttribute id="MARCH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>$$Month$$</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="DIST_PLAN" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>CASE $$Month$$
+	 WHEN 'JANUARY' then &quot;JANUARY&quot; 
+	 WHEN 'FEBRUARY' then &quot;FEBRUARY&quot; 
+	 WHEN 'MARCH' then &quot;MARCH&quot; 
+	 WHEN 'APRIL' then &quot;APRIL&quot; 
+	 WHEN 'MAY' then &quot;MAY&quot; 
+	 WHEN 'JUNE' then &quot;JUNE&quot; 
+	 WHEN 'JULY' then &quot;JULY&quot; 
+	 WHEN 'AUGUST' then &quot;AUGUST&quot; 
+	 WHEN 'SEPTEMBER' then &quot;SEPTEMBER&quot; 
+	 WHEN 'OCTOBER' then &quot;OCTOBER&quot; 
+	 WHEN 'NOVEMBER' then &quot;NOVEMBER&quot; 
+	 WHEN 'DECEMBER' then &quot;DECEMBER&quot; 
+	 ELSE 0 
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_DISTRIBUTOR_TARGET">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="CUSTOMER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="APRIL" source="MONTH1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAY" source="MONTH2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JUNE" source="MONTH3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JULY" source="MONTH4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AUGUST" source="MONTH5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SEPTEMBER" source="MONTH6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OCTOBER" source="MONTH7"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NOVEMBER" source="MONTH8"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DECEMBER" source="MONTH9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JANUARY" source="MONTH10"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FEBRUARY" source="MONTH11"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MARCH" source="MONTH12"/>
+    </input>
+    <filter>&quot;YEAR&quot; = $$FIN_YEAR$$ </filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="DIST_TGT_CUST" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="CUSTOMER_CODE"/>
+      <viewAttribute id="CUSTOMER_NAME"/>
+      <viewAttribute id="REGION"/>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="SALES_ASSOCIATES"/>
+      <viewAttribute id="DIST_PLAN" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Customer_Master">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_CODE" source="CUSTOMER_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+    </input>
+    <input node="TARGET_AGG">
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALES_ASSOCIATES" source="SALES_ASSOCIATES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIST_PLAN" source="DIST_PLAN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_CODE" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+    </input>
+    <joinAttribute name="CUSTOMER_CODE"/>
+    <joinAttribute name="REGION"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="TARGET_AGG">
+    <viewAttributes>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute id="SALES_ASSOCIATES"/>
+      <viewAttribute id="DIST_PLAN" aggregationType="sum"/>
+    
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="REGION"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="DIST_TARGET"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="DIST_TGT_CUST">
+  <attributes>
+    <attribute id="CUSTOMER_CODE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_CODE"/>
+      <keyMapping columnObjectName="DIST_TGT_CUST" columnName="CUSTOMER_CODE"/>
+    </attribute>
+    <attribute id="CUSTOMER_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_NAME"/>
+      <keyMapping columnObjectName="DIST_TGT_CUST" columnName="CUSTOMER_NAME"/>
+    </attribute>
+    <attribute id="REGION" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REGION"/>
+      <keyMapping columnObjectName="DIST_TGT_CUST" columnName="REGION"/>
+    </attribute>
+    <attribute id="YEAR" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR"/>
+      <keyMapping columnObjectName="DIST_TGT_CUST" columnName="YEAR"/>
+    </attribute>
+    <attribute id="SALES_ASSOCIATES" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SALES_ASSOCIATES"/>
+      <keyMapping columnObjectName="DIST_TGT_CUST" columnName="SALES_ASSOCIATES"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="DIST_PLAN" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="DIST_PLAN"/>
+      <measureMapping columnObjectName="DIST_TGT_CUST" columnName="DIST_PLAN"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="650" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Customer_Master" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="813" y="992"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="DIST_TARGET" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1173" y="992"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="DIST_TGT_CUST" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="968" y="547"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Customer_Master" modelObjectNameSpace="DIST_TGT_CUST" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="369" y="30"/>
+      <rectangleSize width="186"/>
+    </shape>
+    <shape modelObjectName="TARGET_AGG" modelObjectNameSpace="DIST_TGT_CUST" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="669" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="TARGET_AGG" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1173" y="866"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

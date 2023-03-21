@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TERUMODRMS_DB.db.View::COfTERUMO_DSB_COUNTS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="TERUMO_DSB_COUNTS.hdbcalculationview"/>
+<localVariables>
+  <variable id="DIST_ID" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="25" mandatory="true">
+      <valueDomain type="empty"/>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS</resourceUri>
+  </DataSource>
+  <DataSource id="NO_OF_PAYMENTS$$$$TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="Projection_2$$$$TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_MATERIEL_MASTER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_MATERIEL_MASTER</resourceUri>
+  </DataSource>
+  <DataSource id="Join_9$$$$TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="Join_9$$$$TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS$$">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="No_of_PI" cardinality="CN_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="PO_STATUS"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="PO_CREATION_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$SAP_ORDER_NO$SAP_ORDER_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;PO_CREATION_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;PO_CREATION_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;PO_CREATION_DATE&quot;)))
+	 ELSE CONCAT(YEAR(&quot;PO_CREATION_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;PO_CREATION_DATE&quot;, 1))))
+END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(&quot;PO_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="PO_STATUS_NUM" datatype="INTEGER" expressionLanguage="SQL">
+    
+        <formula>TO_INTEGER(&quot;PO_STATUS&quot;)</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_STATUS" source="PO_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_CREATION_DATE" source="PO_CREATION_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ORDER_NO$SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+    </input>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ORDER_NO$SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+    </input>
+    <filter>&quot;DISTRIBUTOR_ID&quot; = $$DIST_ID$$</filter>
+    <joinAttribute name="JOIN$SAP_ORDER_NO$SAP_ORDER_NO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="NO_OF_OPEN_SO" cardinality="CN_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="PR_STATUS"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="PR_CREATION_DATE" aggregationType="min"/>
+      <viewAttribute hidden="true" id="JOIN$PR_NO$PR_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;PR_CREATION_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;PR_CREATION_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;PR_CREATION_DATE&quot;)))
+	 ELSE CONCAT(YEAR(&quot;PR_CREATION_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;PR_CREATION_DATE&quot;, 1))))
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(&quot;PR_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="PR_STATUS_NUM" datatype="INTEGER" expressionLanguage="SQL">
+    
+        <formula>TO_INTEGER(&quot;PR_STATUS&quot;)</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PR_STATUS" source="PR_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PR_CREATION_DATE" source="PR_CREATION_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PR_NO$PR_NO" source="PR_NO"/>
+    </input>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PR_NO$PR_NO" source="PR_NO"/>
+    </input>
+    <filter>&quot;PR_STATUS&quot; != 4 AND &quot;DISTRIBUTOR_ID&quot; = $$DIST_ID$$</filter>
+    <joinAttribute name="JOIN$PR_NO$PR_NO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="NO_OF_PAYMENTS" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="APPROVAL_DATE" aggregationType="min"/>
+      <viewAttribute id="SAP_ORDER_NO" aggregationType="sum"/>
+      <viewAttribute id="POP_STATUS" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$SAP_ORDER_NO$SAP_ORDER_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;APPROVAL_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;APPROVAL_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;APPROVAL_DATE&quot;)))
+	 ELSE CONCAT(YEAR(&quot;APPROVAL_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;APPROVAL_DATE&quot;, 1))))
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(&quot;APPROVAL_DATE&quot;)</formula>
+      </calculatedViewAttribute></calculatedViewAttributes>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="APPROVAL_DATE" source="APPROVAL_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POP_STATUS" source="POP_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ORDER_NO$SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+    </input>
+    <input node="NO_OF_PAYMENTS$$$$TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ORDER_NO$SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+    </input>
+    <filter>&quot;DISTRIBUTOR_ID&quot; = $$DIST_ID$$ AND &quot;POP_STATUS&quot; = 13</filter>
+    <joinAttribute name="JOIN$SAP_ORDER_NO$SAP_ORDER_NO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+    
+      <viewAttribute id="PO_STATUS_NUM" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="No_of_PI"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+    
+      <viewAttribute id="NO_OPEN_SO" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="NO_OF_OPEN_SO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="NO_OPEN_SO" source="PR_STATUS_NUM"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="PR_CREATION_DATE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="PR_STATUS_NUM" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_9"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_4">
+    <viewAttributes>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="POP_STATUS" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_3"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="POP_STATUS" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$SAP_ORDER_NO$SAP_ORDER_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="NO_OF_PAYMENTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POP_STATUS" source="POP_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ORDER_NO$SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ORDER_NO$SAP_ORDER_NO" source="SAP_ORDER_NO"/>
+    </input>
+    <joinAttribute name="JOIN$SAP_ORDER_NO$SAP_ORDER_NO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="SAP_ORDER_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_2$$$$TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS$$"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_6">
+    <viewAttributes>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="MATERIAL_DESC"/>
+      <viewAttribute id="GPC_NAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_MATERIEL_MASTER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_9" cardinality="CN_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="PR_CREATION_DATE" aggregationType="min"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="PR_STATUS"/>
+      <viewAttribute hidden="true" id="JOIN$PR_NO$PR_NO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINANCIAL_YEAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN MONTH(&quot;PR_CREATION_DATE&quot;) BETWEEN 1 AND 3
+	 THEN CONCAT(YEAR(ADD_YEARS(&quot;PR_CREATION_DATE&quot;, -1)), CONCAT('-',YEAR(&quot;PR_CREATION_DATE&quot;)))
+	 ELSE CONCAT(YEAR(&quot;PR_CREATION_DATE&quot;), CONCAT('-', YEAR(ADD_YEARS(&quot;PR_CREATION_DATE&quot;, 1))))
+END
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MONTH" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>MONTHNAME(&quot;PR_CREATION_DATE&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="PR_STATUS_NUM" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>TO_INTEGER(&quot;PR_STATUS&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_9$$$$TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PR_CREATION_DATE" source="PR_CREATION_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PR_STATUS" source="PR_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PR_NO$PR_NO" source="PR_NO"/>
+    </input>
+    <input node="Join_9$$$$TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PR_NO$PR_NO" source="PR_NO"/>
+    </input>
+    <filter>(&quot;PR_STATUS&quot; = 3 OR &quot;PR_STATUS&quot; = 1) AND &quot;DISTRIBUTOR_ID&quot; = $$DIST_ID$$</filter>
+    <joinAttribute name="JOIN$PR_NO$PR_NO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_11" cardinality="CN_1" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="NO_OPEN_SO" aggregationType="count"/>
+      <viewAttribute id="POP_STATUS" aggregationType="count"/>
+      <viewAttribute id="BACK" aggregationType="count"/>
+      <viewAttribute id="PO_STATUS_NUM" aggregationType="count"/>
+      <viewAttribute id="MATERIAL_DESC"/>
+      <viewAttribute id="GPC_NAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_10_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NO_OPEN_SO" source="NO_OPEN_SO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="POP_STATUS" source="POP_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BACK" source="BACK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_STATUS_NUM" source="PO_STATUS_NUM"/>
+    </input>
+    <input node="Projection_6">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_DESC" source="MATERIAL_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GPC_NAME" source="GPC_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+    </input>
+    <joinAttribute name="MATERIAL_CODE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_10_1" cardinality="C1_1" joinType="fullOuter" multiJoinNode="Join_10" multiJoinCentralTable="Aggregation_2" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="BACK" aggregationType="count"/>
+      <viewAttribute id="PO_STATUS_NUM" aggregationType="count"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BACK" source="PR_STATUS_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+    </input>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_STATUS_NUM" source="PO_STATUS_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+    </input>
+    <joinAttribute name="MATERIAL_CODE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_10_2" cardinality="C1_1" joinType="fullOuter" multiJoinNode="Join_10" multiJoinCentralTable="Aggregation_2" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="POP_STATUS" aggregationType="count"/>
+      <viewAttribute id="BACK" aggregationType="count"/>
+      <viewAttribute id="PO_STATUS_NUM" aggregationType="count"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="POP_STATUS" source="POP_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+    </input>
+    <input node="Join_10_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="BACK" source="BACK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_STATUS_NUM" source="PO_STATUS_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+    </input>
+    <joinAttribute name="MATERIAL_CODE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_10_3" cardinality="C1_1" joinType="fullOuter" multiJoinNode="Join_10" multiJoinCentralTable="Aggregation_2" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="DISTRIBUTOR_ID"/>
+      <viewAttribute id="BU_CODE"/>
+      <viewAttribute id="SUB_DIV"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="FINANCIAL_YEAR"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="NO_OPEN_SO" aggregationType="count"/>
+      <viewAttribute id="POP_STATUS" aggregationType="count"/>
+      <viewAttribute id="BACK" aggregationType="count"/>
+      <viewAttribute id="PO_STATUS_NUM" aggregationType="count"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTRIBUTOR_ID" source="DISTRIBUTOR_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BU_CODE" source="BU_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUB_DIV" source="SUB_DIV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FINANCIAL_YEAR" source="FINANCIAL_YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NO_OPEN_SO" source="NO_OPEN_SO"/>
+    </input>
+    <input node="Join_10_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="POP_STATUS" source="POP_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BACK" source="BACK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PO_STATUS_NUM" source="PO_STATUS_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_CODE" source="MATERIAL_CODE"/>
+    </input>
+    <joinAttribute name="MATERIAL_CODE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_11">
+  <attributes>
+    <attribute id="DISTRIBUTOR_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DISTRIBUTOR_ID"/>
+      <keyMapping columnObjectName="Join_11" columnName="DISTRIBUTOR_ID"/>
+    </attribute>
+    <attribute id="BU_CODE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BU_CODE"/>
+      <keyMapping columnObjectName="Join_11" columnName="BU_CODE"/>
+    </attribute>
+    <attribute id="SUB_DIV" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUB_DIV"/>
+      <keyMapping columnObjectName="Join_11" columnName="SUB_DIV"/>
+    </attribute>
+    <attribute id="MATERIAL_CODE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATERIAL_CODE"/>
+      <keyMapping columnObjectName="Join_11" columnName="MATERIAL_CODE"/>
+    </attribute>
+    <attribute id="FINANCIAL_YEAR" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FINANCIAL_YEAR"/>
+      <keyMapping columnObjectName="Join_11" columnName="FINANCIAL_YEAR"/>
+    </attribute>
+    <attribute id="MONTH" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONTH"/>
+      <keyMapping columnObjectName="Join_11" columnName="MONTH"/>
+    </attribute>
+    <attribute id="MATERIAL_DESC" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATERIAL_DESC"/>
+      <keyMapping columnObjectName="Join_11" columnName="MATERIAL_DESC"/>
+    </attribute>
+    <attribute id="GPC_NAME" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GPC_NAME"/>
+      <keyMapping columnObjectName="Join_11" columnName="GPC_NAME"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="NO_OPEN_SO" order="7" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="NO_OPEN_SO"/>
+      <measureMapping columnObjectName="Join_11" columnName="NO_OPEN_SO"/>
+    </measure>
+    <measure id="POP_STATUS" order="8" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="POP_STATUS"/>
+      <measureMapping columnObjectName="Join_11" columnName="POP_STATUS"/>
+    </measure>
+    <measure id="BACK" order="9" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="PR_STATUS_NUM"/>
+      <measureMapping columnObjectName="Join_11" columnName="BACK"/>
+    </measure>
+    <measure id="PO_STATUS_NUM" order="10" aggregationType="count" measureType="simple">
+      <descriptions defaultDescription="PO_STATUS_NUM"/>
+      <measureMapping columnObjectName="Join_11" columnName="PO_STATUS_NUM"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="100" y="105"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="No_of_PI" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1314" y="698"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER" modelObjectNameSpace="No_of_PI" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="-150" y="30"/>
+      <rectangleSize width="375"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PO_ITEMS" modelObjectNameSpace="No_of_PI" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="361"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NO_OF_OPEN_SO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-33" y="683"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER" modelObjectNameSpace="NO_OF_OPEN_SO" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="374"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS" modelObjectNameSpace="NO_OF_OPEN_SO" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="524" y="30"/>
+      <rectangleSize width="360"/>
+    </shape>
+    <shape expanded="true" modelObjectName="NO_OF_PAYMENTS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="337" y="886"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PAYMENTS" modelObjectNameSpace="NO_OF_PAYMENTS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PO_HEADER" modelObjectNameSpace="NO_OF_PAYMENTS" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="553" y="23"/>
+      <rectangleSize width="365"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1314" y="556"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-28" y="556"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="867" y="556"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="442" y="556"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="449" y="707"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="NO_OF_PAYMENTS" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="207"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="556" y="886"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="837" y="242"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_9" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="972" y="707"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PR_HEADER" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="374.46484375"/>
+    </shape>
+    <shape modelObjectName="TERUMODRMS_DB.db.Tables::TERUMO_PR_ITEMS" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="500" y="30"/>
+      <rectangleSize width="360.4609375"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_10" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="618" y="355"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_10" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_10">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Aggregation_4" modelObjectNameSpace="Join_10" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_10">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_10" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_10">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_10" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_10">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_11" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="618" y="218"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_10_3" modelObjectNameSpace="Join_11" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="180.939453125"/>
+    </shape>
+    <shape modelObjectName="Projection_6" modelObjectNameSpace="Join_11" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="178.0927734375"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

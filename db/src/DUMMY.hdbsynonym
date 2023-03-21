@@ -1,0 +1,8 @@
+{
+  "TERUMODRMS_DB.db::DUMMY": {
+    "target": {
+      "object": "DUMMY",
+      "schema": "SYS"
+    }
+  }
+}

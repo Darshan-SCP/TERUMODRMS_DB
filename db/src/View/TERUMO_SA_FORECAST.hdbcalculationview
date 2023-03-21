@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="TERUMODRMS_DB.db.View::TERUMO_SA_FORECAST" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="TERUMO_SA_FORECAST"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_FORECAST_HEADER">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_FORECAST_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="TERUMODRMS_DB.db.Tables::TERUMO_FORECAST">
+    <resourceUri>TERUMODRMS_DB.db.Tables::TERUMO_FORECAST</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="FC_NO"/>
+      <viewAttribute id="SALES_ASSOCIATES"/>
+      <viewAttribute id="FORECAST_MONTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_FORECAST_HEADER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="FC_NO"/>
+      <viewAttribute id="MATERIAL_CODE"/>
+      <viewAttribute id="FORECAST_MONTH"/>
+      <viewAttribute id="FORECAST_MONTH1"/>
+      <viewAttribute id="FORECAST_MONTH2"/>
+      <viewAttribute id="FORECAST_MONTH3"/>
+      <viewAttribute id="FORECAST_MONTH4"/>
+      <viewAttribute id="FORECAST_MONTH5"/>
+      <viewAttribute id="FORECAST_MONTH6"/>
+      <viewAttribute id="FORECAST_MONTH7"/>
+      <viewAttribute id="FORECAST_MONTH8"/>
+      <viewAttribute id="FORECAST_MONTH9"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="TERUMODRMS_DB.db.Tables::TERUMO_FORECAST"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="FC_NO"/>
+      <viewAttribute id="SALES_ASSOCIATES"/>
+      <viewAttribute id="FORECAST_MONTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="FC_NO"/>
+      <viewAttribute id="FORECAST_MONTH"/>
+      <viewAttribute id="FORECAST_MONTH1" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH2" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH3" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH4" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH5" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH6" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH7" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH8" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH9" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="SALES_ASSOCIATES"/>
+      <viewAttribute id="FC_NO_1" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH_1" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH1" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH2" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH3" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH4" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH5" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH6" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH7" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH8" aggregationType="sum"/>
+      <viewAttribute id="FORECAST_MONTH9" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$FC_NO$FC_NO"/>
+      <viewAttribute hidden="true" id="JOIN$FORECAST_MONTH$FORECAST_MONTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALES_ASSOCIATES" source="SALES_ASSOCIATES"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FC_NO$FC_NO" source="FC_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FORECAST_MONTH$FORECAST_MONTH" source="FORECAST_MONTH"/>
+    </input>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FC_NO_1" source="FC_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH_1" source="FORECAST_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH1" source="FORECAST_MONTH1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH2" source="FORECAST_MONTH2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH3" source="FORECAST_MONTH3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH4" source="FORECAST_MONTH4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH5" source="FORECAST_MONTH5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH6" source="FORECAST_MONTH6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH7" source="FORECAST_MONTH7"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH8" source="FORECAST_MONTH8"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FORECAST_MONTH9" source="FORECAST_MONTH9"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FC_NO$FC_NO" source="FC_NO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FORECAST_MONTH$FORECAST_MONTH" source="FORECAST_MONTH"/>
+    </input>
+    <joinAttribute name="JOIN$FC_NO$FC_NO"/>
+    <joinAttribute name="JOIN$FORECAST_MONTH$FORECAST_MONTH"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="SALES_ASSOCIATES" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SALES_ASSOCIATES"/>
+      <keyMapping columnObjectName="Join_1" columnName="SALES_ASSOCIATES"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="FC_NO_1" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FC_NO"/>
+      <measureMapping columnObjectName="Join_1" columnName="FC_NO_1"/>
+    </measure>
+    <measure id="FORECAST_MONTH_1" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH_1"/>
+    </measure>
+    <measure id="FORECAST_MONTH1" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH1"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH1"/>
+    </measure>
+    <measure id="FORECAST_MONTH2" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH2"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH2"/>
+    </measure>
+    <measure id="FORECAST_MONTH3" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH3"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH3"/>
+    </measure>
+    <measure id="FORECAST_MONTH4" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH4"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH4"/>
+    </measure>
+    <measure id="FORECAST_MONTH5" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH5"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH5"/>
+    </measure>
+    <measure id="FORECAST_MONTH6" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH6"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH6"/>
+    </measure>
+    <measure id="FORECAST_MONTH7" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH7"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH7"/>
+    </measure>
+    <measure id="FORECAST_MONTH8" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH8"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH8"/>
+    </measure>
+    <measure id="FORECAST_MONTH9" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="FORECAST_MONTH9"/>
+      <measureMapping columnObjectName="Join_1" columnName="FORECAST_MONTH9"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-44" y="367"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="249" y="367"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-44" y="276"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="249" y="266"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="90" y="188"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="197.0634765625"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="198.45458984375"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

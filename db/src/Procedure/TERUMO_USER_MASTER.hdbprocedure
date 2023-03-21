@@ -1,0 +1,110 @@
+PROCEDURE "TERUMODRMS_DB.db.Procedure::TERUMO_USER_MASTER"(
+	IN ACTION VARCHAR(10),
+	IN USER_ID NVARCHAR(100),
+	IN BU_CODE NVARCHAR(50),
+	IN USER_NAME NVARCHAR(50),
+	IN USER_TYPE NVARCHAR(50),
+	IN USER_ROLE NVARCHAR(50),
+	IN USER_EMAIL NVARCHAR(50),
+	IN PHONE_NO NVARCHAR(10),
+	IN REGION VARCHAR(1),
+	IN USER_ADDR VARCHAR(200),
+	IN ST_USER "TERUMODRMS_DB.db.Structure::ST_TERUMO_USER_MASTER",
+	IN DATA_LENGTH INTEGER,
+	OUT OUT_SUCCESS VARCHAR(100)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+    /*************************************
+       Procedure logic 
+   *************************************/
+	DECLARE CURR_TIMESTAMP TIMESTAMP;
+	DECLARE CODE_EXISTS INTEGER;
+	
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION SELECT ::SQL_ERROR_CODE, ::SQL_ERROR_MESSAGE FROM "TERUMODRMS_DB.db::DUMMY";
+	-- Get current timestamp
+	SELECT CURRENT_TIMESTAMP INTO CURR_TIMESTAMP FROM "TERUMODRMS_DB.db::DUMMY";
+	
+	-- Check if Hospital entry exists
+	-- IF :ACTION = 'EDIT' OR :ACTION = 'DELETE'
+	IF :ACTION = 'EDIT'
+	THEN
+		SELECT COUNT(*) into "CODE_EXISTS" FROM "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER"
+		WHERE "USER_ID" = :USER_ID AND "USER_ROLE" = :USER_ROLE AND "EMAIL" = :USER_EMAIL;
+	END IF;
+   
+	IF :ACTION = 'CREATE' 
+	THEN
+		
+		INSERT INTO "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER" 
+		(
+			"USER_ID", "BU_CODE", "NAME", "USER_TYPE", "USER_ROLE", "EMAIL", "PHONE_NO", "REGION", "ADDRESS", "CREATED_ON"
+		)
+		SELECT  "USER_ID", "BU_CODE", "NAME", "USER_TYPE", "USER_ROLE", "EMAIL", "PHONE_NO", "REGION", "ADDRESS", :CURR_TIMESTAMP
+		FROM :ST_USER;
+		COMMIT;
+		
+		-- Success message on the basis of data length		
+		IF :DATA_LENGTH > 1
+		THEN
+			OUT_SUCCESS := :DATA_LENGTH || ' Users Created.';
+		ELSE
+			OUT_SUCCESS := 'User: ' ||:USER_NAME|| ' Created.';
+		END IF; 
+	
+	ELSEIF :ACTION = 'EDIT' AND CODE_EXISTS = 1
+	THEN
+		IF CODE_EXISTS = 1
+		THEN 
+			UPDATE "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER" 
+			SET "BU_CODE" = :BU_CODE,
+				"NAME" = :USER_NAME,
+				"USER_TYPE" = :USER_TYPE,
+				"USER_ROLE" = :USER_ROLE,
+				"EMAIL" = :USER_EMAIL,
+				"PHONE_NO" = :PHONE_NO,
+				"REGION" = :REGION, 
+				"ADDRESS" = :USER_ADDR,
+				"LAST_UPDATED" = :CURR_TIMESTAMP
+			WHERE "USER_ID" = :USER_ID AND "USER_ROLE" = :USER_ROLE AND "EMAIL" = :USER_EMAIL;
+			COMMIT;
+			
+			OUT_SUCCESS := 'User: ' ||:USER_NAME|| ' Updated.';
+		
+		ELSE
+			OUT_SUCCESS := 'No record found for id:' ||:USER_ID|| ' and name:' ||:USER_NAME;
+		END IF;
+		
+	ELSEIF :ACTION = 'DELETE'
+	THEN
+	
+		-- DELETE FROM "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER"
+		-- WHERE "USER_ID" = :USER_ID;
+		
+		DELETE FROM "TERUMODRMS_DB.db.Tables::TERUMO_USER_MASTER"
+		WHERE "USER_ID" IN (SELECT  "USER_ID" FROM :ST_USER)
+		AND "USER_ROLE" IN (SELECT "USER_ROLE" FROM :ST_USER)
+		AND "EMAIL" IN (SELECT "EMAIL" FROM :ST_USER);
+		COMMIT;
+		
+		
+		
+		-- Success message on the basis of data length		
+		IF :DATA_LENGTH > 1
+		THEN
+			OUT_SUCCESS := :DATA_LENGTH || ' - Users Deleted.';
+		ELSE
+			OUT_SUCCESS := 'User:' ||:USER_NAME|| ' Deleted.';
+		END IF; 
+		
+	ELSE
+		OUT_SUCCESS := 'Invalid Action';
+	END IF;  
+   
+END
